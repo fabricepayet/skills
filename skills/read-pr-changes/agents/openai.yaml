@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read PR/MR Changes"
+  short_description: "Understand PR and MR changes without review"
+  default_prompt: "Use $read-pr-changes to explain the essential changes in this PR or MR."
