@@ -6,8 +6,8 @@ Apply controls at the boundary that owns the resource being protected.
 
 | Risk | Primary control | Required companion control |
 |---|---|---|
-| Repeated requests | Shared atomic actor + tenant/global quotas | Idempotency and `Retry-After` |
-| Parallel bypass | Atomic consume or database constraint | Concurrency test |
+| Repeated requests | Transport quotas on every request | Idempotent business admission and `Retry-After` |
+| Parallel bypass | Composite all-or-nothing multi-scope consume | Concurrency and zero-partial-debit tests |
 | Oversized upload | Signed exact length or range policy | Bounded server read and hash |
 | Duplicate jobs | Stable job ID or unique outbox event | Idempotent worker |
 | Retry amplification | Bounded automatic transient-attempt budget | Backoff, paused recovery, permanent-failure budget, provider cap |
@@ -30,11 +30,12 @@ Never treat ingestion and processing as one indivisible availability decision. D
 ## Rate-limiter properties
 
 - Use a store shared by every instance.
-- Consume atomically before costly admission.
+- Consume every applicable actor, tenant, and global admission ceiling in one all-or-nothing operation before costly work. A denied or unavailable decision changes no counter and authorizes no downstream work.
 - Key by the narrowest accountable actor available; prefer credentials, invitations, tokens, or devices over IP when shared networks are legitimate.
-- Apply every actor, tenant, and global ceiling required by the exposure as independent atomic checks.
+- Meter every request for transport resources it actually consumes: request rate, bytes, concurrency, authentication, lookup, and response or egress work.
 - Return a bounded retry duration.
-- Skip consumption for proven idempotent replay.
+- Authenticate and apply current authorization before returning a stored result. After proving the same actor, tenant, route, idempotency key, and canonical payload, skip only duplicate business-admission quotas and downstream work that will not run again.
+- Use an idempotent admission decision when the limiter response can be lost, so a retry observes the original outcome without a second debit.
 - Test store errors separately from limit exhaustion.
 - Choose windows from legitimate workflow and worst-case exposure, then tune from observed data.
 
@@ -70,7 +71,7 @@ Flow: mobile recording → API record → signed object upload → confirmation 
 Required control plan:
 
 1. Validate role and tenant at every API and object-key boundary.
-2. Limit new reports by the narrowest accountable actor plus tenant and global scopes; do not charge idempotent create or confirm replays twice.
+2. Apply transport quotas to every request. Consume new-report actor, tenant, and global admission quotas all-or-nothing; a proven create or confirm replay skips only duplicate business and downstream charges.
 3. Sign the real upload size and reject a bounded read beyond the maximum.
 4. Consume the processing quota before enqueueing. Count manual retry against both retry and processing budgets.
 5. Bound worker attempts, transcription duration, structuring tokens, and provider spend.

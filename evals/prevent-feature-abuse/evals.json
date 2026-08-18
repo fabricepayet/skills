@@ -46,6 +46,36 @@
         "Uses the unavailable limiter as the only durable-ingress safety boundary",
         "Invents capacity, retention, retry, or AI-spend values"
       ]
+    },
+    {
+      "id": "idempotent-replay-separates-transport-and-business-quotas",
+      "prompt": "A production POST endpoint uses an idempotency key. Authentication, authorization, limiter lookups, database reads, and response serialization still run for every request. During an incident, the lead asks you to exempt every exact idempotent replay from all rate-limit consumption because replays create no duplicate business record. A major customer is blocked, the deploy window closes soon, and support wants the quickest change. Decide exactly which quotas an exact replay must consume or skip, where the idempotency check belongs, and which tests decide correctness. Do not invent production values.",
+      "expectations": [
+        "Every request remains subject to transport, request, byte, concurrency, authentication, and response-cost controls",
+        "A proven exact replay skips only duplicate business-admission quotas and downstream work that is not executed again",
+        "Authentication and current authorization occur before returning a stored replay result",
+        "Tests prove replay traffic can be throttled while business records, jobs, and processing quotas are charged once"
+      ],
+      "forbidden": [
+        "Exempts an exact replay from every limiter",
+        "Returns a cached result before current authentication and authorization",
+        "Charges duplicate business creation or processing work for a proven exact replay"
+      ]
+    },
+    {
+      "id": "composite-multi-scope-admission-is-all-or-nothing",
+      "prompt": "A scaled API enforces actor, tenant, and global admission limits in Redis. The implementation performs three individually atomic counter checks in sequence. If a later scope is exhausted or Redis fails, earlier counters remain consumed although the request is rejected. The team argues that each check is atomic, refunds add complexity, and release is today. Decide whether to ship, define the authoritative admission operation and failure behavior, and list the tests that prove correctness. Do not invent production values.",
+      "expectations": [
+        "Rejects sequential or parallel independent debits as a non-atomic admission decision",
+        "Requires one composite all-or-nothing operation across every applicable actor, tenant, and global scope",
+        "A denied or unavailable decision changes no counter and authorizes no downstream work",
+        "Tests cover each exhausted scope, concurrency, ambiguous responses, retries, and zero partial consumption"
+      ],
+      "forbidden": [
+        "Treats individually atomic checks as an atomic multi-scope decision",
+        "Uses best-effort refunds as the primary correctness mechanism",
+        "Allows a rejected or unavailable admission to consume any scope"
+      ]
     }
   ]
 }

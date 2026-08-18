@@ -8,8 +8,8 @@ Write tests before production changes. Each test must fail for the expected miss
 |---|---|
 | Actor quota | The narrowest accountable actor reaches its own ceiling; shared-IP users are not incorrectly merged when a stronger identity exists |
 | Tenant/global quota | Different actors share the tenant or global ceiling; other tenants remain isolated |
-| Atomicity | Concurrent requests cannot exceed the configured ceiling |
-| Idempotency | Same intent and payload replays successfully without duplicate work or quota charge |
+| Atomicity | Actor, tenant, and global ceilings are consumed in one all-or-nothing decision; exhaustion, outage, or ambiguous response cannot partially debit any scope |
+| Idempotency | Same actor, tenant, route, key, and payload replay without duplicate business work; every replay still consumes applicable transport, byte, concurrency, authentication, and response quotas |
 | Payload bound | Exact maximum succeeds; maximum + 1 fails before full read or processing |
 | Signed upload | Declared-small/actual-large, altered header, missing header, and reuse attempts fail |
 | Queue admission | Duplicate event creates one logical job; queue failure does not create partial state |
@@ -48,6 +48,8 @@ Residual risk: what remains and who owns it
 Before reporting completion, verify all applicable statements:
 
 - Every costly or irreversible path has an admission bound.
+- Every multi-scope admission is all-or-nothing; rejection or unavailability leaves every counter unchanged.
+- Every replay remains bounded by the transport resources it consumes while duplicate business effects are free.
 - Every payload has a real-resource bound, not only schema metadata.
 - Every retry layer appears in the exposure equation.
 - Rate-limit exhaustion and limiter outage have different tested behavior.

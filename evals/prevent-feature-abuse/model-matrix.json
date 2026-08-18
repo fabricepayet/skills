@@ -21,6 +21,14 @@
         {
           "id": "bounded-durable-ingress-during-limiter-outage",
           "status": "pass"
+        },
+        {
+          "id": "idempotent-replay-separates-transport-and-business-quotas",
+          "status": "pass"
+        },
+        {
+          "id": "composite-multi-scope-admission-is-all-or-nothing",
+          "status": "pass"
         }
       ],
       "inventedProductionValues": false
@@ -38,6 +46,14 @@
         },
         {
           "id": "bounded-durable-ingress-during-limiter-outage",
+          "status": "pass"
+        },
+        {
+          "id": "idempotent-replay-separates-transport-and-business-quotas",
+          "status": "pass"
+        },
+        {
+          "id": "composite-multi-scope-admission-is-all-or-nothing",
           "status": "pass"
         }
       ],
@@ -57,13 +73,21 @@
         {
           "id": "bounded-durable-ingress-during-limiter-outage",
           "status": "pass"
+        },
+        {
+          "id": "idempotent-replay-separates-transport-and-business-quotas",
+          "status": "pass"
+        },
+        {
+          "id": "composite-multi-scope-admission-is-all-or-nothing",
+          "status": "pass"
         }
       ],
       "inventedProductionValues": false
     }
   ],
   "summary": {
-    "passed": 9,
+    "passed": 15,
     "failed": 0
   }
 }

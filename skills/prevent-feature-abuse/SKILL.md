@@ -25,8 +25,8 @@ Bound the harm an actor can cause across the complete execution chain. Rate limi
 
 ## Non-negotiable invariants
 
-- Use a shared atomic limiter for scaled services; apply independent ceilings to the narrowest accountable actor available (such as user, credential, invitation, token, or device), plus tenant and global scopes required by the exposure. Treat IP as a secondary signal when shared networks are legitimate.
-- Do not charge proven idempotent replays again.
+- For scaled services, evaluate and consume every applicable actor, tenant, and global admission ceiling in one shared all-or-nothing operation. A denied or unavailable decision changes no counter and authorizes no downstream work. Treat IP as a secondary signal when shared networks are legitimate.
+- Meter every request for the transport resources it actually consumes, including requests, bytes, concurrency, authentication, and response work. After current authorization and proof of an exact idempotent replay, skip only duplicate business-admission quotas and downstream work that will not run again.
 - Verify actual bytes, duration, tokens, and work.
 - Include every retry and downstream stage in exposure.
 - Fail closed when an unavailable limiter would otherwise permit unmetered external cost or irreversible work.
@@ -43,6 +43,8 @@ Stop rollout or report a blocker when any applies:
 - A signed upload trusts only the declared size.
 - An endpoint quota ignores queue or provider retries.
 - A costly path fails open when its limiter is unavailable.
+- A replay bypasses transport, byte, concurrency, authentication, or response-cost controls.
+- Actor, tenant, and global admission checks can partially consume counters or depend on best-effort refunds.
 - `429` becomes permanent data loss, consumes permanent-failure attempts, or causes unbounded automatic retries.
 - Payload reads, model output, queue depth, or resource retention are unbounded.
 
@@ -51,6 +53,8 @@ Stop rollout or report a blocker when any applies:
 | Rationalization | Required response |
 |---|---|
 | "We added rate limiting" | Recalculate the full downstream amplification chain. |
+| "Idempotent means free" | Meter every request's real transport cost; skip only duplicate business effects after replay is proven. |
+| "Each scope is atomic" | Make the complete multi-scope admission decision atomic and all-or-nothing. |
 | "Availability requires fail-open" | Separate durable ingestion from costly processing. |
 | "We must retry forever to preserve data" | Preserve the data, bound automatic retries, then pause for explicit resumable recovery. |
 | "We need a safe default now" | Do not invent a number. State the exposure variable, authoritative constraint, and production evidence needed to choose it. |
