@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prevent Feature Abuse"
+  short_description: "Audit and harden abuse-prone product flows"
+  default_prompt: "Use $prevent-feature-abuse to audit and harden this feature against abuse, cost amplification, and data loss."

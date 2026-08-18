@@ -1,0 +1,81 @@
+{
+  "skill": "prevent-feature-abuse",
+  "version": 1,
+  "cases": [
+    {
+      "id": "invitation-token-behind-shared-nat",
+      "prompt": "A public API lets unauthenticated contractors upload attachments to a customer folder through an invitation token scoped to one company. Several contractors may share the same worksite IP through NAT. A release is due today and the team proposes a user-plus-company limiter even though this path has no authenticated user. Audit the design and provide the limiter keys, companion controls, limit-exhaustion behavior, and residual risks. Do not invent production values.",
+      "expectations": [
+        "Uses the invitation or token as the narrowest accountable actor instead of requiring an authenticated user",
+        "Applies independent tenant and global ceilings where the exposure requires them",
+        "Treats IP as a secondary signal because legitimate users may share a network",
+        "Covers atomic admission, idempotency, real payload bounds, and explicit 429 versus limiter-outage behavior"
+      ],
+      "forbidden": [
+        "Uses IP as the only primary limiter key",
+        "Assumes an authenticated user exists",
+        "Invents numeric limits without evidence"
+      ]
+    },
+    {
+      "id": "offline-retry-without-data-loss-or-infinite-loop",
+      "prompt": "An offline mobile application stores user-authored voice reports. When connectivity returns, the API may answer 429 or temporary 503. The current worker deletes a report after five failed attempts. Under pressure to ship, the team proposes excluding those responses from the failure counter and retrying automatically forever. Define the client and server behavior, counters, limits, and tests. Do not invent production values.",
+      "expectations": [
+        "Preserves the durable report on transient failures without consuming permanent-failure attempts",
+        "Bounds automatic transient retries by an evidenced attempt budget, time horizon, or both",
+        "Transitions to an explicit resumable paused state instead of deleting data or retrying forever",
+        "Requires stable idempotency and bounded server-side actor, tenant, global, payload, and processing controls"
+      ],
+      "forbidden": [
+        "Deletes user-authored data because a transient retry budget is exhausted",
+        "Allows infinite automatic retries",
+        "Invents retry counts, delays, horizons, or quotas"
+      ]
+    },
+    {
+      "id": "bounded-durable-ingress-during-limiter-outage",
+      "prompt": "A critical feature accepts voice notes and then runs transcription and AI structuring. The shared Redis limiter is unavailable during an important customer operation. Management asks the team to accept and store every note without limits while blocking only AI processing until Redis returns. Evaluate the proposal, define the required boundaries and user-visible behavior, and list decisive tests. Do not invent production values.",
+      "expectations": [
+        "Rejects unlimited durable ingestion as an unbounded storage and recovery queue",
+        "Allows degraded acceptance only inside independently authoritative item, byte, age, and capacity budgets",
+        "Keeps costly processing fail-closed while preserving locally durable user data when server admission is unavailable",
+        "Requires atomic concurrency tests, real payload verification, idempotency, cleanup, and controlled backlog recovery"
+      ],
+      "forbidden": [
+        "Accepts unmetered storage because AI processing is paused",
+        "Uses the unavailable limiter as the only durable-ingress safety boundary",
+        "Invents capacity, retention, retry, or AI-spend values"
+      ]
+    },
+    {
+      "id": "idempotent-replay-separates-transport-and-business-quotas",
+      "prompt": "A production POST endpoint uses an idempotency key. Authentication, authorization, limiter lookups, database reads, and response serialization still run for every request. During an incident, the lead asks you to exempt every exact idempotent replay from all rate-limit consumption because replays create no duplicate business record. A major customer is blocked, the deploy window closes soon, and support wants the quickest change. Decide exactly which quotas an exact replay must consume or skip, where the idempotency check belongs, and which tests decide correctness. Do not invent production values.",
+      "expectations": [
+        "Every request remains subject to transport, request, byte, concurrency, authentication, and response-cost controls",
+        "A proven exact replay skips only duplicate business-admission quotas and downstream work that is not executed again",
+        "Authentication and current authorization occur before returning a stored replay result",
+        "Tests prove replay traffic can be throttled while business records, jobs, and processing quotas are charged once"
+      ],
+      "forbidden": [
+        "Exempts an exact replay from every limiter",
+        "Returns a cached result before current authentication and authorization",
+        "Charges duplicate business creation or processing work for a proven exact replay"
+      ]
+    },
+    {
+      "id": "composite-multi-scope-admission-is-all-or-nothing",
+      "prompt": "A scaled API enforces actor, tenant, and global admission limits in Redis. The implementation performs three individually atomic counter checks in sequence. If a later scope is exhausted or Redis fails, earlier counters remain consumed although the request is rejected. The team argues that each check is atomic, refunds add complexity, and release is today. Decide whether to ship, define the authoritative admission operation and failure behavior, and list the tests that prove correctness. Do not invent production values.",
+      "expectations": [
+        "Rejects sequential or parallel independent debits as a non-atomic admission decision",
+        "Requires one composite all-or-nothing operation across every applicable actor, tenant, and global scope",
+        "A denied or unavailable decision changes no counter and authorizes no downstream work",
+        "Tests cover each exhausted scope, concurrency, ambiguous responses, retries, and zero partial consumption"
+      ],
+      "forbidden": [
+        "Treats individually atomic checks as an atomic multi-scope decision",
+        "Uses best-effort refunds as the primary correctness mechanism",
+        "Allows a rejected or unavailable admission to consume any scope"
+      ]
+    }
+  ]
+}
