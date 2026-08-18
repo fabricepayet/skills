@@ -1,0 +1,69 @@
+name: Validate skills
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.5"
+
+      - name: Validate Agent Skills packages
+        env:
+          SKILLS_REF_SOURCE: git+https://github.com/agentskills/agentskills@69ef37e9424c0a7ea9dd2293b559e43ec8176379#subdirectory=skills-ref
+        run: |
+          while IFS= read -r skill_directory; do
+            uvx --from "$SKILLS_REF_SOURCE" skills-ref validate "$skill_directory"
+          done < <(find skills -mindepth 1 -maxdepth 1 -type d | sort)
+
+      - name: Validate evaluation manifests
+        run: |
+          find evals -name '*.json' -print0 | xargs -0 -n1 jq empty
+
+          while IFS= read -r manifest; do
+            jq -e '
+              (.skill | type == "string" and length > 0) and
+              (.version | type == "number") and
+              (.cases | type == "array" and length >= 3) and
+              ([.cases[].id] | length == (unique | length)) and
+              ([.cases[] |
+                (.id | type == "string" and length > 0) and
+                (.prompt | type == "string" and length > 0) and
+                (.expectations | type == "array" and length > 0) and
+                (.forbidden | type == "array" and length > 0)
+              ] | all)
+            ' "$manifest"
+          done < <(find evals -name 'evals.json' -type f | sort)
+
+          while IFS= read -r matrix; do
+            rubric="$(dirname "$matrix")/evals.json"
+            jq -e --slurpfile rubric "$rubric" '
+              ($rubric[0].cases | map(.id) | sort) as $case_ids |
+              (.skill == $rubric[0].skill) and
+              (.models | length >= 3) and
+              ([.models[].model] | length == (unique | length)) and
+              (all(.models[];
+                ((.cases | map(.id) | sort) == $case_ids) and
+                all(.cases[]; .status == "pass" or .status == "fail") and
+                (.inventedProductionValues | type == "boolean")
+              )) and
+              (.summary.passed == ([.models[].cases[] | select(.status == "pass")] | length)) and
+              (.summary.failed == ([.models[].cases[] | select(.status == "fail")] | length))
+            ' "$matrix"
+          done < <(find evals -name 'model-matrix.json' -type f | sort)
