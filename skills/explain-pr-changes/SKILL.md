@@ -1,9 +1,9 @@
 ---
-name: read-pr-changes
+name: explain-pr-changes
 description: "Use when a user wants to understand, summarize, abridge, or get a semantic reading of an existing GitHub pull request or GitLab merge request by number, URL, or repository reference, without asking for defect findings."
 ---
 
-# Read PR Changes
+# Explain PR Changes
 
 Turn a GitHub PR or GitLab MR into a structured semantic reading. Explain what
 changed and why it matters to the program; do not search for defects or propose
