@@ -82,6 +82,47 @@ Product Clarification Request and returns to `$product-spec`; technical design
 cannot change the contract silently. Delivery tickets are published only after
 both artifacts and the proposed ticket graph have been approved.
 
+## Why three separate skills?
+
+Software delivery crosses three distinct decision authorities. Combining them
+in one specification makes ownership ambiguous: technical convenience can
+silently change product behavior, while ticket planning can introduce design
+decisions that nobody reviewed. This workflow places an explicit approval
+boundary between each responsibility.
+
+| Stage | Accountable role | Decision authority | Approved artifact |
+| --- | --- | --- | --- |
+| Product specification | Product Owner | Problem, outcomes, actors, permissions, business rules, observable behavior, acceptance criteria, and scope | Product Contract |
+| Technical specification | Technical lead and development team | Architecture, ownership boundaries, data, interfaces, security, reliability, observability, rollout, and test strategy | Technical Design |
+| Delivery planning | Technical lead and development team | Vertical slices, execution dependencies, independent verification, and executable frontier | Delivery ticket graph |
+
+The technical owner may be a lead developer, tech lead, architect, or a
+developer designated by the team. The workflow defines decision authority, not
+a mandatory job title. Developers may advise the Product Owner about cost or
+feasibility, but only the Product Owner can approve a change to observable
+product behavior.
+
+### Role-scoped grilling
+
+`product-spec` and `technical-spec` each contain their own decision-tree
+interview. The product grilling resolves **what and why** without choosing an
+implementation. The technical grilling resolves **how** without redefining the
+approved product. Both ask only the current frontier of independent questions,
+provide recommendations, and continue until no decision in their authority
+remains open.
+
+### Handoffs and clarification
+
+Each downstream stage consumes exact, approved artifact versions. When
+engineering discovers missing or contradictory product behavior, it creates a
+Product Clarification Request instead of changing the Product Contract. The
+Product Owner then approves a new contract version, and engineering revises
+only the affected part of the Technical Design. Delivery tickets cannot fill
+product or technical gaps; they return them to the responsible skill.
+
+This preserves product ownership, engineering autonomy, and traceability while
+preventing silent scope changes between discovery and implementation.
+
 ## Using `prevent-feature-abuse`
 
 Invoke the skill explicitly with `$prevent-feature-abuse`.
