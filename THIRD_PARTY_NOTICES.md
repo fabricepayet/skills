@@ -1,6 +1,19 @@
+# Third-Party Notices
+
+## Matt Pocock Skills
+
+The `product-spec`, `technical-spec`, and `delivery-tickets` workflow is an
+independent adaptation inspired by Matt Pocock's `grilling`, `to-spec`, and
+`to-tickets` skills:
+
+[mattpocock/skills](https://github.com/mattpocock/skills)
+
+Matt Pocock is not affiliated with and does not endorse or maintain this
+project. His original skills are distributed under the following license:
+
 MIT License
 
-Copyright (c) 2026 Fabrice Payet
+Copyright (c) 2026 Matt Pocock
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

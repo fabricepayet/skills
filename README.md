@@ -114,12 +114,18 @@ request validates the Agent Skills packages and evaluation manifests.
 
 ## Inspiration
 
-`explain-pr-changes` was inspired by the semantic diff-reading principles explored
-by [Meat](https://github.com/boldsoftware/meat). It is an independent
-implementation and does not include Meat's code or transformation engine.
+- The specification workflow is an independent adaptation inspired by Matt
+  Pocock's [`grilling`, `to-spec`, and `to-tickets` skills](https://github.com/mattpocock/skills).
+  Matt Pocock is not affiliated with or responsible for this project. See
+  [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the original MIT
+  license notice.
+- `explain-pr-changes` was inspired by the semantic diff-reading principles
+  explored by [Meat](https://github.com/boldsoftware/meat). It is an independent
+  implementation and does not include Meat's code or transformation engine.
 
 ## License
 
 Copyright 2026 Fabrice Payet.
 
-Licensed under the [Apache License 2.0](LICENSE).
+Licensed under the [MIT License](LICENSE). Third-party notices are listed in
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
