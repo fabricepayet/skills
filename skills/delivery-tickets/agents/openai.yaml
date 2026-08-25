@@ -1,0 +1,7 @@
+interface:
+  display_name: "Delivery Tickets"
+  short_description: "Create vertical implementation tickets"
+  default_prompt: "Use $delivery-tickets to turn these approved product and technical artifacts into vertical delivery tickets."
+
+policy:
+  allow_implicit_invocation: false

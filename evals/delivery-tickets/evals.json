@@ -1,0 +1,66 @@
+{
+  "skill": "delivery-tickets",
+  "version": 1,
+  "cases": [
+    {
+      "id": "layer-teams-do-not-force-horizontal-tickets",
+      "prompt": "Use $delivery-tickets for approved Product Contract BAL-20 v2 and Technical Design BAL-31 v1. The database, API, and frontend teams want separate tickets named Create tables, Build endpoints, and Add UI so each team can work in its own queue.",
+      "expectations": [
+        "Drafts narrow end-to-end delivery slices across every relevant layer",
+        "Makes each ticket independently demonstrable or verifiable",
+        "Maps each ticket to Product Contract criteria and the Technical Design",
+        "Uses genuine blockers rather than organizational layers as dependencies"
+      ],
+      "forbidden": [
+        "Publishes separate schema, API, UI, and test tickets for the same behavior",
+        "Treats team ownership as proof that a horizontal ticket is necessary",
+        "Creates tickets before engineering approves the breakdown"
+      ]
+    },
+    {
+      "id": "planning-cannot-invent-missing-decisions",
+      "prompt": "Use $delivery-tickets for approved Product Contract BAL-20 v2 and Technical Design BAL-31 v1. While mapping AC-09, you discover that the Product Contract does not define who may retry a failed transfer and the Technical Design contains no authorization decision. The deadline is today, so the team asks you to choose an admin-only rule in the ticket.",
+      "expectations": [
+        "Stops ticket publication for the affected scope",
+        "Routes the observable permission gap through a Product Clarification Request",
+        "Requires a revised approved Product Contract and then an affected Technical Design revision",
+        "Leaves unrelated fully specified slices available for review when they are independent"
+      ],
+      "forbidden": [
+        "Invents the admin-only product rule",
+        "Hides a new architecture or product decision in acceptance criteria",
+        "Marks the affected ticket ready for implementation"
+      ]
+    },
+    {
+      "id": "wide-refactor-uses-bounded-expand-contract",
+      "prompt": "Use $delivery-tickets for a design that renames a shared persisted identifier used by thousands of call sites. No vertical slice can land green while old consumers require the old name. Produce the safest executable breakdown without freezing all work in one enormous ticket.",
+      "expectations": [
+        "Recognizes a justified wide-refactor exception to vertical slicing",
+        "Uses expand, bounded migration batches, and contract steps",
+        "Keeps each migration batch green when possible and declares blocking edges",
+        "Records why a vertical slice cannot land and how the exception exits"
+      ],
+      "forbidden": [
+        "Pretends the mechanical refactor is user-visible behavior",
+        "Creates one unbounded repository-wide migration ticket",
+        "Deletes the old form before every migration batch completes"
+      ]
+    },
+    {
+      "id": "published-graph-is-complete-and-traceable",
+      "prompt": "Use $delivery-tickets for approved Product Contract BAL-20 v3 and Technical Design BAL-31 v2 in a tracker that supports parent issues and native blocking links. Draft, review, and publish the delivery graph.",
+      "expectations": [
+        "Checks that both input artifact versions are current and approved",
+        "Shows the full breakdown, coverage, verification, and blocking graph before publication",
+        "Creates delivery tickets as direct children of the Product Contract and links the Technical Design",
+        "Publishes an acyclic graph whose frontier contains every immediately executable ticket"
+      ],
+      "forbidden": [
+        "Modifies or closes either approved input artifact",
+        "Leaves a Product Contract acceptance criterion unmapped",
+        "Publishes a ticket without independent verification"
+      ]
+    }
+  ]
+}
