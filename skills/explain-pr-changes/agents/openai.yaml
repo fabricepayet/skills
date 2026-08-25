@@ -2,3 +2,6 @@ interface:
   display_name: "Explain PR/MR Changes"
   short_description: "Explain PR and MR changes without review"
   default_prompt: "Use $explain-pr-changes to explain the essential changes in this PR or MR."
+
+policy:
+  allow_implicit_invocation: false
