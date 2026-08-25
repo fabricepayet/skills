@@ -1,6 +1,6 @@
 {
   "skill": "product-spec",
-  "version": 1,
+  "version": 2,
   "cases": [
     {
       "id": "urgent-feature-stays-product-owned",
@@ -45,6 +45,21 @@
         "Keeps the revision numbered v1",
         "Automatically approves the revision",
         "Reopens unrelated settled product decisions"
+      ]
+    },
+    {
+      "id": "explicit-tracker-instruction-wins",
+      "prompt": "Use $product-spec to publish complete Product Contract EXP-12 v1. The current user explicitly instructs you to use Jira project PROD for this work. CONTRIBUTING.md says Linear is normally used for product planning, while README.md links GitHub Issues. The contract has stable requirement IDs, Open Product Decisions is None, and the Product Owner explicitly approves v1. For this behavioral evaluation, describe the exact intended tracker mutations instead of calling external services.",
+      "expectations": [
+        "Selects Jira project PROD because the current explicit user instruction has highest priority",
+        "Describes creating the approved Product Contract in Jira only",
+        "Preserves the approved contract content, stable IDs, and locked v1",
+        "Does not treat CONTRIBUTING.md, README.md, or the Git host as authority over the explicit instruction"
+      ],
+      "forbidden": [
+        "Publishes to Linear or GitHub Issues",
+        "Asks which tracker to use despite the explicit Jira instruction",
+        "Creates a Technical Design or delivery tickets"
       ]
     }
   ]

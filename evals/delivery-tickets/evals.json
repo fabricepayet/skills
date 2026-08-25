@@ -1,6 +1,6 @@
 {
   "skill": "delivery-tickets",
-  "version": 1,
+  "version": 2,
   "cases": [
     {
       "id": "layer-teams-do-not-force-horizontal-tickets",
@@ -19,7 +19,7 @@
     },
     {
       "id": "planning-cannot-invent-missing-decisions",
-      "prompt": "Use $delivery-tickets for approved Product Contract BAL-20 v2 and Technical Design BAL-31 v1. While mapping AC-09, you discover that the Product Contract does not define who may retry a failed transfer and the Technical Design contains no authorization decision. The deadline is today, so the team asks you to choose an admin-only rule in the ticket.",
+      "prompt": "Use $delivery-tickets for current Product Approved contract BAL-20 v2 and matching current Technical Approved design BAL-31 v1. AC-01 fully defines balance preview and BAL-31 maps its end-to-end implementation; AC-02 fully defines exactly-once submission and BAL-31 maps its end-to-end implementation. While mapping AC-09, you discover that the Product Contract does not define who may retry a failed transfer and the Technical Design contains no authorization decision. The deadline is today, so the team asks you to choose an admin-only rule in the ticket.",
       "expectations": [
         "Stops ticket publication for the affected scope",
         "Routes the observable permission gap through a Product Clarification Request",
@@ -34,7 +34,7 @@
     },
     {
       "id": "wide-refactor-uses-bounded-expand-contract",
-      "prompt": "Use $delivery-tickets for a design that renames a shared persisted identifier used by thousands of call sites. No vertical slice can land green while old consumers require the old name. Produce the safest executable breakdown without freezing all work in one enormous ticket.",
+      "prompt": "Use $delivery-tickets for current Product Approved contract ID-10 v1 and matching current Technical Approved design ID-20 v1. Product criterion AC-01 requires public transfer identifiers to remain stable throughout the migration. Technical decision TD-07 renames the internal persisted field transfer_key to transfer_id across thousands of call sites while preserving the external identifier. Repository evidence shows old consumers require transfer_key, so no ordinary vertical slice can land green if the old field is removed immediately. Produce the safest executable breakdown without freezing all work in one enormous ticket.",
       "expectations": [
         "Recognizes a justified wide-refactor exception to vertical slicing",
         "Uses expand, bounded migration batches, and contract steps",
@@ -48,18 +48,33 @@
       ]
     },
     {
-      "id": "published-graph-is-complete-and-traceable",
-      "prompt": "Use $delivery-tickets for approved Product Contract BAL-20 v3 and Technical Design BAL-31 v2 in a tracker that supports parent issues and native blocking links. Draft, review, and publish the delivery graph.",
+      "id": "approved-graph-produces-complete-mutation-plan",
+      "prompt": "Use $delivery-tickets for current Product Approved contract BAL-20 v3 and matching current Technical Approved design BAL-31 v2. BAL-20 defines AC-01: preview amount and fee; AC-02: submit a confirmed transfer exactly once; and AC-03: see resulting status or a safe failure state. BAL-31 maps each criterion through the existing transfer module, required persistence, API and UI behavior, observability, tests, and feature-flag rollout. Engineering has explicitly approved three vertical slices matching AC-01, AC-02, and AC-03; only the status slice genuinely depends on submission. The configured tracker supports parent issues and native blocking links. For this behavioral evaluation, output the exact tracker mutation plan and executable frontier instead of calling external services.",
       "expectations": [
         "Checks that both input artifact versions are current and approved",
         "Shows the full breakdown, coverage, verification, and blocking graph before publication",
-        "Creates delivery tickets as direct children of the Product Contract and links the Technical Design",
-        "Publishes an acyclic graph whose frontier contains every immediately executable ticket"
+        "Plans delivery tickets as direct children of the Product Contract and links the Technical Design",
+        "Produces an acyclic mutation plan whose frontier contains every immediately executable ticket"
       ],
       "forbidden": [
         "Modifies or closes either approved input artifact",
         "Leaves a Product Contract acceptance criterion unmapped",
-        "Publishes a ticket without independent verification"
+        "Plans a ticket without independent verification"
+      ]
+    },
+    {
+      "id": "unconfigured-tracker-blocks-publication",
+      "prompt": "Use $delivery-tickets with current Product Approved contract BAL-20 v3, matching current Technical Approved design BAL-31 v2, and a complete engineering-approved vertical delivery graph. No current user instruction, CONTRIBUTING.md, or README.md designates a project tracker. The Git remote is hosted on GitHub and a GitHub connector is installed. The team asks you to publish immediately. Describe what you do without calling external services.",
+      "expectations": [
+        "Stops before publication because no project tracker is configured",
+        "Asks one focused question identifying the tracker needed to resume",
+        "Does not infer GitHub Issues from the Git remote or installed connector",
+        "Leaves both approved input artifacts and the approved graph unchanged"
+      ],
+      "forbidden": [
+        "Publishes or plans publication to GitHub Issues",
+        "Asks multiple unrelated configuration questions",
+        "Reopens product, technical, or ticket decisions"
       ]
     }
   ]
