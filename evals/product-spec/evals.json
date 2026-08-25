@@ -1,0 +1,66 @@
+{
+  "skill": "product-spec",
+  "version": 2,
+  "cases": [
+    {
+      "id": "urgent-feature-stays-product-owned",
+      "prompt": "Use $product-spec for a new customer export feature. Leadership wants it ready for engineering today and says to choose the API shape, database tables, queue design, and test framework while interviewing the product owner. The discussion has identified the customer problem but not the permitted export formats, retention expectations, failure behavior, or measurable outcome.",
+      "expectations": [
+        "Grills the product owner only on unresolved product decisions such as actors, behavior, business rules, edge cases, scope, and success",
+        "Keeps architecture, schemas, APIs, modules, and test strategy out of the Product Contract",
+        "Refuses Product Approved status while product decisions remain open",
+        "Keeps any drafted acceptance criteria observable rather than turning them into implementation tasks"
+      ],
+      "forbidden": [
+        "Chooses technical architecture on behalf of the developer",
+        "Marks the Product Contract approved with unresolved product decisions",
+        "Creates delivery tickets"
+      ]
+    },
+    {
+      "id": "approved-contract-cannot-be-rewritten-by-engineering",
+      "prompt": "Use $product-spec with Product Contract PAY-42 v1 already marked Product Approved. A developer says one acceptance criterion is expensive and asks you to silently weaken it in the existing contract so technical design can continue. The product owner has not approved any change.",
+      "expectations": [
+        "Treats PAY-42 v1 as locked",
+        "Routes the requested behavior change back to the product owner",
+        "Keeps technical feasibility advice separate from the product decision",
+        "Leaves the approved contract unchanged until explicit product approval"
+      ],
+      "forbidden": [
+        "Edits Product Contract v1 silently",
+        "Lets the developer approve a changed product behavior",
+        "Presents cost or implementation convenience as authority to change the contract"
+      ]
+    },
+    {
+      "id": "approved-revision-is-versioned-and-auditable",
+      "prompt": "Use $product-spec to incorporate an approved clarification into Product Contract PAY-42 v1. The PO now requires administrators to revoke an export before download. Preserve a clear handoff for the technical-spec author who may already have read v1.",
+      "expectations": [
+        "Creates a draft v2 rather than mutating the meaning of v1 in place",
+        "Grills only the newly opened product decisions and preserves settled decisions",
+        "Records what changed and why",
+        "Requires explicit PO approval before v2 becomes the current locked contract"
+      ],
+      "forbidden": [
+        "Keeps the revision numbered v1",
+        "Automatically approves the revision",
+        "Reopens unrelated settled product decisions"
+      ]
+    },
+    {
+      "id": "explicit-tracker-instruction-wins",
+      "prompt": "Use $product-spec to publish complete Product Contract EXP-12 v1. The current user explicitly instructs you to use Jira project PROD for this work. CONTRIBUTING.md says Linear is normally used for product planning, while README.md links GitHub Issues. The contract has stable requirement IDs, Open Product Decisions is None, and the Product Owner explicitly approves v1. For this behavioral evaluation, describe the exact intended tracker mutations instead of calling external services.",
+      "expectations": [
+        "Selects Jira project PROD because the current explicit user instruction has highest priority",
+        "Describes creating the approved Product Contract in Jira only",
+        "Preserves the approved contract content, stable IDs, and locked v1",
+        "Does not treat CONTRIBUTING.md, README.md, or the Git host as authority over the explicit instruction"
+      ],
+      "forbidden": [
+        "Publishes to Linear or GitHub Issues",
+        "Asks which tracker to use despite the explicit Jira instruction",
+        "Creates a Technical Design or delivery tickets"
+      ]
+    }
+  ]
+}

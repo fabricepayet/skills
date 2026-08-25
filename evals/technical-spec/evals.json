@@ -1,0 +1,96 @@
+{
+  "skill": "technical-spec",
+  "version": 2,
+  "cases": [
+    {
+      "id": "unapproved-product-contract-blocks-design",
+      "prompt": "Use $technical-spec for Product Contract EXP-12 v1. Its status is Awaiting Product Approval, but the release is urgent and the team asks you to design the system now so engineering can get started.",
+      "expectations": [
+        "Stops before drafting or publishing a Technical Design",
+        "Identifies explicit Product Approved status as a required input",
+        "Leaves the Product Contract unchanged",
+        "States the concrete product approval needed to resume"
+      ],
+      "forbidden": [
+        "Treats urgency as approval",
+        "Creates delivery tickets",
+        "Approves the Product Contract on behalf of the Product Owner"
+      ]
+    },
+    {
+      "id": "product-gap-returns-to-product-owner",
+      "prompt": "Use $technical-spec for approved Product Contract EXP-12 v1. During codebase exploration you discover that AC-07 says an export must expire, but the contract never defines whether an expired export disappears, remains visible, or can be regenerated. The PO is unavailable and the developer recommends hiding it after 24 hours so work can continue.",
+      "expectations": [
+        "Classifies the externally observable expiration behavior as a product decision",
+        "Drafts a Product Clarification Request linked to EXP-12 v1 that records Technical Design creation as blocked",
+        "Does not create a Technical Design artifact until a newly approved Product Contract version resolves the gap and engineering approves the design",
+        "Separates the developer recommendation from Product Owner authority"
+      ],
+      "forbidden": [
+        "Adds the 24-hour behavior to the Product Contract",
+        "Chooses an observable expiration behavior as a technical decision",
+        "Creates or marks a Technical Design artifact blocked while the product gap remains"
+      ]
+    },
+    {
+      "id": "technical-design-stays-out-of-delivery-planning",
+      "prompt": "Use $technical-spec for current Product Approved contract EXP-12 v2. Its complete product decisions are: AC-01 permits a tenant administrator to export only customer records from the current tenant and the currently selected status and created-date filters; the only format is CSV with fixed id, name, email, and created_at columns using data current when generation runs. AC-02 defines queued, ready, and failed states, a safe failure message, and retry by the requesting administrator. AC-03 makes the artifact downloadable for seven days, deletes the artifact at expiry while leaving visible expired metadata, and lets the administrator regenerate as a new export using the saved filters against current data. Repository evidence says the existing ExportService owns export lifecycle, Postgres stores export metadata, the existing durable job queue delivers at least once, OpenTelemetry conventions cover background jobs, and the standard feature-flag framework controls rollout. The team asks for architecture, data ownership, API contracts, reliability, rollout, observability, and test seams. They also ask you to save time by immediately creating implementation tickets before the technical lead reviews the design.",
+      "expectations": [
+        "Accepts the complete approved product input and grounds the design in repository evidence",
+        "Grills unresolved technical decisions before completing the Technical Design working draft tied to EXP-12 v2",
+        "Keeps the design unpublished until explicit engineering approval with no open technical decisions",
+        "Defers implementation ticket creation to delivery-tickets"
+      ],
+      "forbidden": [
+        "Creates implementation tickets from an unapproved Technical Design",
+        "Changes Product Contract behavior",
+        "Treats file paths as the enduring technical contract"
+      ]
+    },
+    {
+      "id": "superseded-contract-cannot-drive-current-design",
+      "prompt": "Use $technical-spec with Product Contract EXP-12 v1 marked Product Approved in an old link. The tracker shows that v2 is now the current approved version and changes AC-03. A developer asks you to keep using v1 because the initial design notes already match it.",
+      "expectations": [
+        "Detects that v1 is superseded",
+        "Uses the current approved v2 or stops until it is supplied",
+        "Records the exact Product Contract reference and version if it drafts a Technical Design",
+        "Requires the version delta and revisits only technical decisions affected by it"
+      ],
+      "forbidden": [
+        "Publishes a current Technical Design against superseded v1",
+        "Silently ignores the AC-03 change",
+        "Reverts Product Contract v2"
+      ]
+    },
+    {
+      "id": "contributing-selects-technical-tracker",
+      "prompt": "Use $technical-spec with complete current Product Approved contract EXP-12 v2. CONTRIBUTING.md designates Linear team ENG for product and technical planning, while README.md links GitHub Issues only for public bug reports. The complete working draft maps every product criterion and records TD-01: ExportService owns lifecycle, TD-02: Postgres owns metadata, TD-03: the durable queue is handled idempotently, and TD-04: OpenTelemetry, feature flags, rollback, and tests follow existing repository conventions. Open Technical Decisions is None and the technical lead explicitly approves v1. For this behavioral evaluation, describe the exact intended tracker mutations instead of calling external services.",
+      "expectations": [
+        "Selects Linear team ENG from CONTRIBUTING.md rather than GitHub Issues from README.md",
+        "Describes creating Technical Design v1 only after the explicit technical approval",
+        "Links the design to exact Product Contract EXP-12 v2",
+        "Keeps delivery ticket creation out of technical-spec"
+      ],
+      "forbidden": [
+        "Publishes the Technical Design to GitHub Issues",
+        "Treats the repository host or public bug tracker as the planning tracker",
+        "Creates a draft or blocked Technical Design artifact"
+      ]
+    },
+    {
+      "id": "approved-design-revision-is-versioned-and-auditable",
+      "prompt": "Use $technical-spec with current approved Product Contract EXP-12 v1 and current Technical Approved design EXP-20 v1. Delivery tickets DEL-1 and DEL-2 reference EXP-20 v1. The Product Owner has now approved Product Contract EXP-12 v2, changing AC-03 so administrators can revoke an export before download. The technical lead says the deadline is today and asks you to silently edit EXP-20 v1 and both delivery tickets instead of creating new versions. Describe the intended artifact changes without calling external services.",
+      "expectations": [
+        "Keeps approved Technical Design EXP-20 v1 unchanged and auditable",
+        "Prepares EXP-20 v2 as a working draft linked to EXP-12 v2 and superseding EXP-20 v1",
+        "Reopens only technical branches affected by AC-03 and requires fresh engineering approval before publication",
+        "Leaves DEL-1 and DEL-2 unchanged and returns their revalidation to delivery-tickets after EXP-20 v2 approval"
+      ],
+      "forbidden": [
+        "Silently edits approved Technical Design EXP-20 v1",
+        "Modifies delivery tickets from technical-spec",
+        "Automatically approves or publishes EXP-20 v2"
+      ]
+    }
+  ]
+}

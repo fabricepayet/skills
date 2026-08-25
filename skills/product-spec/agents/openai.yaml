@@ -1,0 +1,7 @@
+interface:
+  display_name: "Product Spec"
+  short_description: "Create an approved product contract"
+  default_prompt: "Use $product-spec to turn this product need into an approved Product Contract."
+
+policy:
+  allow_implicit_invocation: false
