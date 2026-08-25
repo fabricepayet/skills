@@ -1,6 +1,6 @@
 {
   "skill": "delivery-tickets",
-  "version": 2,
+  "version": 3,
   "cases": [
     {
       "id": "layer-teams-do-not-force-horizontal-tickets",
@@ -49,17 +49,19 @@
     },
     {
       "id": "approved-graph-produces-complete-mutation-plan",
-      "prompt": "Use $delivery-tickets for current Product Approved contract BAL-20 v3 and matching current Technical Approved design BAL-31 v2. BAL-20 defines AC-01: preview amount and fee; AC-02: submit a confirmed transfer exactly once; and AC-03: see resulting status or a safe failure state. BAL-31 maps each criterion through the existing transfer module, required persistence, API and UI behavior, observability, tests, and feature-flag rollout. Engineering has explicitly approved three vertical slices matching AC-01, AC-02, and AC-03; only the status slice genuinely depends on submission. The configured tracker supports parent issues and native blocking links. For this behavioral evaluation, output the exact tracker mutation plan and executable frontier instead of calling external services.",
+      "prompt": "Use $delivery-tickets for current Product Approved contract BAL-20 v3 in Linear issue BAL-20 and matching current Technical Approved design BAL-31 v2 in Linear issue BAL-31. BAL-20 defines AC-01: preview amount and fee; AC-02: submit a confirmed transfer exactly once; and AC-03: see resulting status or a safe failure state. BAL-31 maps each criterion through the existing transfer module, required persistence, API and UI behavior, observability, tests, and feature-flag rollout. Engineering has explicitly approved three vertical slices matching AC-01, AC-02, and AC-03; only the status slice genuinely depends on submission. The configured tracker is Linear team PAY, project Balance Transfers. Delivery issues use workflow state Ready and label delivery, are direct children of BAL-20, relate to BAL-31, and use Linear native blocking links. For this behavioral evaluation, output the exact tracker mutation plan and executable frontier instead of calling external services.",
       "expectations": [
         "Checks that both input artifact versions are current and approved",
         "Shows the full breakdown, coverage, verification, and blocking graph before publication",
-        "Plans delivery tickets as direct children of the Product Contract and links the Technical Design",
+        "Targets Linear team PAY and project Balance Transfers with state Ready and label delivery",
+        "Plans delivery tickets as direct children of BAL-20 and relates them to BAL-31",
         "Produces an acyclic mutation plan whose frontier contains every immediately executable ticket"
       ],
       "forbidden": [
         "Modifies or closes either approved input artifact",
         "Leaves a Product Contract acceptance criterion unmapped",
-        "Plans a ticket without independent verification"
+        "Plans a ticket without independent verification",
+        "Leaves unresolved tracker placeholders or asks for tracker configuration"
       ]
     },
     {
