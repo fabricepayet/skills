@@ -22,14 +22,14 @@
       "prompt": "Use $technical-spec for approved Product Contract EXP-12 v1. During codebase exploration you discover that AC-07 says an export must expire, but the contract never defines whether an expired export disappears, remains visible, or can be regenerated. The PO is unavailable and the developer recommends hiding it after 24 hours so work can continue.",
       "expectations": [
         "Classifies the externally observable expiration behavior as a product decision",
-        "Drafts a Product Clarification Request linked to EXP-12 v1 and the blocked Technical Design",
-        "Keeps the Technical Design blocked until a newly approved Product Contract version resolves the gap",
+        "Drafts a Product Clarification Request linked to EXP-12 v1 that records Technical Design creation as blocked",
+        "Does not create a Technical Design artifact until a newly approved Product Contract version resolves the gap and engineering approves the design",
         "Separates the developer recommendation from Product Owner authority"
       ],
       "forbidden": [
         "Adds the 24-hour behavior to the Product Contract",
         "Chooses an observable expiration behavior as a technical decision",
-        "Marks the Technical Design approved while the product gap remains"
+        "Creates or marks a Technical Design artifact blocked while the product gap remains"
       ]
     },
     {

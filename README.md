@@ -2,6 +2,13 @@
 
 A collection of reusable AI agent skills.
 
+## Project management
+
+This repository uses
+[GitHub Issues](https://github.com/fabricepayet/skills/issues) for contribution
+and project tracking. Branches, commits, and pull requests reference the
+corresponding issue when applicable.
+
 ## Available skills
 
 ### `product-spec`
@@ -115,10 +122,11 @@ remains open.
 
 Each downstream stage consumes exact, approved artifact versions. When
 engineering discovers missing or contradictory product behavior, it creates a
-Product Clarification Request instead of changing the Product Contract. The
-Product Owner then approves a new contract version, and engineering revises
-only the affected part of the Technical Design. Delivery tickets cannot fill
-product or technical gaps; they return them to the responsible skill.
+Product Clarification Request instead of changing the Product Contract or
+creating a blocked Technical Design. The Product Owner then approves a new
+contract version. Engineering resumes the affected design branches and creates
+the Technical Design only after technical approval. Delivery tickets cannot
+fill product or technical gaps; they return them to the responsible skill.
 
 This preserves product ownership, engineering autonomy, and traceability while
 preventing silent scope changes between discovery and implementation.

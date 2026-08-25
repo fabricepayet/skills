@@ -4,7 +4,7 @@
   "cases": [
     {
       "id": "layer-teams-do-not-force-horizontal-tickets",
-      "prompt": "Use $delivery-tickets for approved Product Contract BAL-20 v2 and Technical Design BAL-31 v1. The database, API, and frontend teams want separate tickets named Create tables, Build endpoints, and Add UI so each team can work in its own queue.",
+      "prompt": "Use $delivery-tickets for current approved Product Contract BAL-20 v2 and matching approved Technical Design BAL-31 v1. BAL-20 defines AC-01: a customer can preview the balance-transfer amount and fee; AC-02: a customer can submit the confirmed transfer exactly once; and AC-03: a customer can see the resulting status and a safe failure state. BAL-31 assigns the flow to the existing transfer module and requires the persistence change, API behavior, UI state, observability, tests, and feature-flag rollout needed by each behavior. The database, API, and frontend teams want separate tickets named Create tables, Build endpoints, and Add UI so each team can work in its own queue.",
       "expectations": [
         "Drafts narrow end-to-end delivery slices across every relevant layer",
         "Makes each ticket independently demonstrable or verifiable",

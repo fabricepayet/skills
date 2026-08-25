@@ -9,7 +9,7 @@
         "Grills the product owner only on unresolved product decisions such as actors, behavior, business rules, edge cases, scope, and success",
         "Keeps architecture, schemas, APIs, modules, and test strategy out of the Product Contract",
         "Refuses Product Approved status while product decisions remain open",
-        "Produces observable acceptance criteria rather than implementation tasks"
+        "Keeps any drafted acceptance criteria observable rather than turning them into implementation tasks"
       ],
       "forbidden": [
         "Chooses technical architecture on behalf of the developer",

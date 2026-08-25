@@ -9,6 +9,16 @@ description: Use when a team needs to decompose a current approved Product Contr
 
 Publish a dependency graph of **tracer-bullet vertical slices**. Each delivery ticket makes one narrow, complete behavior independently demonstrable or verifiable while preserving traceability to approved product and technical decisions.
 
+## Tracker resolution
+
+Before reading or mutating tracked artifacts, resolve the project tracker in this order:
+
+1. an explicit instruction from the user for the current work;
+2. the repository's root `CONTRIBUTING.md` and any contribution document it explicitly delegates to;
+3. the repository's root `README.md`.
+
+A tracker is configured only when the selected source explicitly designates it for product or issue tracking. A Git host, remote URL, installed connector, badge, or incidental tracker link is not enough. When the selected source names multiple trackers without routing this work, or none of the sources configures one, ask one focused question before publishing. Follow the documented project, issue type, hierarchy, labels, and workflow states when they exist.
+
 ## Input gate
 
 Require exact references and versions for:
@@ -25,7 +35,7 @@ Stop when either artifact is missing, unapproved, superseded, or mismatched. Del
 3. **Detect specification gaps.** Route missing observable behavior to a Product Clarification Request and `product-spec`. A newly approved Product Contract version requires `technical-spec` to revise the affected design before ticketing resumes. Route missing engineering decisions directly to a Technical Design revision. Block only affected work; continue drafting unrelated slices when their inputs are complete.
 4. **Draft vertical slices.** Apply every vertical-slice invariant below. Give each ticket only genuine blocking edges and keep the executable frontier as wide as the design allows.
 5. **Review the graph.** Present the complete proposed breakdown before mutating the tracker. For each ticket show its outcome, covered IDs, relevant technical path, independent verification, and blockers. Ask whether granularity, coverage, and blocking edges are correct; iterate until engineering explicitly approves.
-6. **Publish.** Create tickets in dependency order so native references can be added. Make them direct children of the Product Contract and relate each to the Technical Design when the tracker supports those relationships. Use native blocking links, configured ready state, and existing labels; fall back to explicit metadata in the body.
+6. **Publish.** Create tickets in dependency order in the resolved tracker so native references can be added. Make them direct children of the Product Contract and relate each to the Technical Design when the tracker supports those relationships. Use native blocking links, configured ready state, and existing labels; fall back to explicit metadata in the body.
 7. **Report the frontier.** List every published ticket whose blockers are already complete or empty. Leave both approved input artifacts unchanged.
 
 ## Vertical-slice invariants
