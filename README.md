@@ -4,6 +4,27 @@ A collection of reusable AI agent skills.
 
 ## Available skills
 
+### `product-spec`
+
+Grill unresolved product decisions and publish a versioned, Product
+Owner-approved Product Contract without making technical decisions.
+
+See [`skills/product-spec/SKILL.md`](skills/product-spec/SKILL.md).
+
+### `technical-spec`
+
+Turn a current approved Product Contract into an engineering-approved
+Technical Design, returning missing product decisions to the Product Owner.
+
+See [`skills/technical-spec/SKILL.md`](skills/technical-spec/SKILL.md).
+
+### `delivery-tickets`
+
+Convert approved product and technical artifacts into traceable, independently
+verifiable vertical delivery tickets with explicit blocking edges.
+
+See [`skills/delivery-tickets/SKILL.md`](skills/delivery-tickets/SKILL.md).
+
 ### `explain-pr-changes`
 
 Turn a GitHub pull request or GitLab merge request into a structured semantic
@@ -24,25 +45,42 @@ See [`skills/prevent-feature-abuse/SKILL.md`](skills/prevent-feature-abuse/SKILL
 
 ## Installation
 
-Install both skills globally from GitHub:
+Install all skills globally from GitHub:
 
 ```bash
 npx skills add fabricepayet/skills -g \
-  --skill explain-pr-changes prevent-feature-abuse
+  --skill product-spec technical-spec delivery-tickets \
+  explain-pr-changes prevent-feature-abuse
 ```
 
 This records the GitHub repository, skill paths, and installed versions so the
 skills can be updated later:
 
 ```bash
-npx skills update explain-pr-changes prevent-feature-abuse -g
+npx skills update product-spec technical-spec delivery-tickets \
+  explain-pr-changes prevent-feature-abuse -g
 ```
 
 To install only one skill, pass its name to `--skill`. Keep customizations in
 this repository: an update replaces the installed copy.
 
-In Codex, both skills are user-invoked and do not activate automatically.
-Invoke them as `$explain-pr-changes` or `$prevent-feature-abuse`.
+In Codex, these skills are user-invoked and do not activate automatically.
+Invoke them explicitly with their `$skill-name`.
+
+## Using the specification workflow
+
+Run the workflow through its approval gates:
+
+```text
+$product-spec -> approved Product Contract
+$technical-spec -> approved Technical Design
+$delivery-tickets -> vertical implementation tickets
+```
+
+An approved Product Contract is locked. Missing product behavior creates a
+Product Clarification Request and returns to `$product-spec`; technical design
+cannot change the contract silently. Delivery tickets are published only after
+both artifacts and the proposed ticket graph have been approved.
 
 ## Using `prevent-feature-abuse`
 
@@ -69,9 +107,8 @@ figures.
 
 ## Evaluation
 
-Reusable behavior scenarios live in
-[`evals/prevent-feature-abuse/evals.json`](evals/prevent-feature-abuse/evals.json).
-The latest multi-model results are recorded in
+Reusable behavior scenarios live under [`evals`](evals). The latest
+multi-model results for `prevent-feature-abuse` are recorded in
 [`model-matrix.json`](evals/prevent-feature-abuse/model-matrix.json). Every pull
 request validates the Agent Skills packages and evaluation manifests.
 
