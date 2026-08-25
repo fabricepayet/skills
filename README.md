@@ -24,24 +24,29 @@ See [`skills/prevent-feature-abuse/SKILL.md`](skills/prevent-feature-abuse/SKILL
 
 ## Installation
 
-Clone the repository, then copy the required skill into your agent's skill
-directory. For Codex:
+Install both skills globally from GitHub:
 
 ```bash
-git clone https://github.com/fabricepayet/skills.git
-cd skills
-cp -R skills/prevent-feature-abuse ~/.codex/skills/
+npx skills add fabricepayet/skills -g \
+  --skill explain-pr-changes prevent-feature-abuse
 ```
 
-Use the equivalent skills directory for another Agent Skills-compatible
-client.
+This records the GitHub repository, skill paths, and installed versions so the
+skills can be updated later:
+
+```bash
+npx skills update explain-pr-changes prevent-feature-abuse -g
+```
+
+To install only one skill, pass its name to `--skill`. Keep customizations in
+this repository: an update replaces the installed copy.
+
+In Codex, both skills are user-invoked and do not activate automatically.
+Invoke them as `$explain-pr-changes` or `$prevent-feature-abuse`.
 
 ## Using `prevent-feature-abuse`
 
-The skill can activate automatically when a request mentions abuse, rate
-limiting, quotas, oversized uploads, retry amplification, queue pressure,
-external API cost, AI spend, or offline resubmission. In Codex, invoke it
-explicitly with `$prevent-feature-abuse` when you want deterministic routing.
+Invoke the skill explicitly with `$prevent-feature-abuse`.
 
 Read-only audit:
 
