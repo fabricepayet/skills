@@ -1,0 +1,7 @@
+interface:
+  display_name: "Technical Spec"
+  short_description: "Create an approved technical design"
+  default_prompt: "Use $technical-spec to design the implementation for this approved Product Contract."
+
+policy:
+  allow_implicit_invocation: false

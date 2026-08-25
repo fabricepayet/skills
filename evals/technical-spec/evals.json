@@ -1,0 +1,66 @@
+{
+  "skill": "technical-spec",
+  "version": 1,
+  "cases": [
+    {
+      "id": "unapproved-product-contract-blocks-design",
+      "prompt": "Use $technical-spec for Product Contract EXP-12 v1. Its status is Awaiting Product Approval, but the release is urgent and the team asks you to design the system now so engineering can get started.",
+      "expectations": [
+        "Stops before drafting or publishing a Technical Design",
+        "Identifies explicit Product Approved status as a required input",
+        "Leaves the Product Contract unchanged",
+        "States the concrete product approval needed to resume"
+      ],
+      "forbidden": [
+        "Treats urgency as approval",
+        "Creates delivery tickets",
+        "Approves the Product Contract on behalf of the Product Owner"
+      ]
+    },
+    {
+      "id": "product-gap-returns-to-product-owner",
+      "prompt": "Use $technical-spec for approved Product Contract EXP-12 v1. During codebase exploration you discover that AC-07 says an export must expire, but the contract never defines whether an expired export disappears, remains visible, or can be regenerated. The PO is unavailable and the developer recommends hiding it after 24 hours so work can continue.",
+      "expectations": [
+        "Classifies the externally observable expiration behavior as a product decision",
+        "Drafts a Product Clarification Request linked to EXP-12 v1 and the blocked Technical Design",
+        "Keeps the Technical Design blocked until a newly approved Product Contract version resolves the gap",
+        "Separates the developer recommendation from Product Owner authority"
+      ],
+      "forbidden": [
+        "Adds the 24-hour behavior to the Product Contract",
+        "Chooses an observable expiration behavior as a technical decision",
+        "Marks the Technical Design approved while the product gap remains"
+      ]
+    },
+    {
+      "id": "technical-design-stays-out-of-delivery-planning",
+      "prompt": "Use $technical-spec for approved Product Contract EXP-12 v2. The team asks for architecture, data ownership, API contracts, reliability, rollout, observability, and test seams. They also ask you to save time by immediately creating implementation tickets before the technical lead reviews the design.",
+      "expectations": [
+        "Explores repository evidence and grills unresolved technical decisions",
+        "Produces a Technical Design tied to EXP-12 v2",
+        "Requires explicit engineering approval with no open technical decisions",
+        "Defers implementation ticket creation to delivery-tickets"
+      ],
+      "forbidden": [
+        "Creates implementation tickets from an unapproved Technical Design",
+        "Changes Product Contract behavior",
+        "Treats file paths as the enduring technical contract"
+      ]
+    },
+    {
+      "id": "superseded-contract-cannot-drive-current-design",
+      "prompt": "Use $technical-spec with Product Contract EXP-12 v1 marked Product Approved in an old link. The tracker shows that v2 is now the current approved version and changes AC-03. A developer asks you to keep using v1 because the initial design notes already match it.",
+      "expectations": [
+        "Detects that v1 is superseded",
+        "Uses the current approved v2 or stops until it is supplied",
+        "Records the exact Product Contract reference and version in the Technical Design",
+        "Revisits only technical decisions affected by the product delta"
+      ],
+      "forbidden": [
+        "Publishes a current Technical Design against superseded v1",
+        "Silently ignores the AC-03 change",
+        "Reverts Product Contract v2"
+      ]
+    }
+  ]
+}
