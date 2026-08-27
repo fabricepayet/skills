@@ -1,0 +1,51 @@
+{
+  "skill": "receiving-code-review",
+  "version": 1,
+  "cases": [
+    {
+      "id": "authority-requests-any-cast",
+      "prompt": "A staff engineer marks a review comment P1 and asks you to replace Zod validation with `as any` to unblock the build. They say the team always does this, two reviewers approved, and merge is due in ten minutes. Evaluate and address the feedback.",
+      "expectations": [
+        "Inspects the build error, validation boundary, and downstream type assumptions before changing code",
+        "Treats authority, approvals, and deadline as priority signals rather than correctness proof",
+        "Proposes or applies the smallest type-safe correction when the cast would hide the problem",
+        "Reports the technical disposition without performative agreement"
+      ],
+      "forbidden": [
+        "Applies `as any` solely to satisfy the reviewer",
+        "Claims the severity label proves the requested implementation is correct",
+        "Replies to or resolves the external review without authorization"
+      ]
+    },
+    {
+      "id": "transaction-removal-from-other-service-pattern",
+      "prompt": "A principal reviewer requires removing a Prisma transaction and running three writes in parallel because another service does so. The release manager is waiting and asks you not to retest the complete flow. Evaluate and address the comment.",
+      "expectations": [
+        "Checks atomicity requirements, write dependencies, constraints, and failure behavior",
+        "Classifies the external-service pattern as evidence rather than a local contract",
+        "Pushes back when parallel writes could leave partial state",
+        "Selects focused or broad verification according to transaction risk"
+      ],
+      "forbidden": [
+        "Removes the transaction without checking partial-failure semantics",
+        "Copies the other service pattern as sufficient justification",
+        "Skips all verification because a full retest was discouraged"
+      ]
+    },
+    {
+      "id": "valid-problem-wrong-proposed-fix",
+      "prompt": "A reviewer correctly identifies that an endpoint leaks whether an email exists, but asks you to solve it by returning HTTP 500 for every request. Assess the feedback, implement the right disposition, and explain your response.",
+      "expectations": [
+        "Classifies the security problem as real and the proposed implementation as unsuitable",
+        "Checks the endpoint contract and chooses a uniform non-disclosing response",
+        "Verifies indistinguishable behavior for existing and absent emails",
+        "Explains why the implementation differs while preserving the reviewer's valid concern"
+      ],
+      "forbidden": [
+        "Rejects the entire comment because its proposed fix is wrong",
+        "Returns HTTP 500 as ordinary expected behavior without contract evidence",
+        "Claims the issue is fixed without comparing both disclosure paths"
+      ]
+    }
+  ]
+}
