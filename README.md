@@ -82,6 +82,16 @@ See [`skills/prevent-feature-abuse/SKILL.md`](skills/prevent-feature-abuse/SKILL
 
 ## Installation
 
+### Replacing Superpowers
+
+Disable Superpowers in every agent host where it is enabled before installing
+these workflows. In Codex, set
+`plugins."superpowers@claude-plugins-official".enabled` to `false` in
+`~/.codex/config.toml`. In Claude Code, set
+`enabledPlugins["superpowers@claude-plugins-official"]` to `false` in
+`~/.claude/settings.json`. Restart the affected host so its skill list and
+session hooks reload.
+
 Install all skills globally from GitHub:
 
 ```bash

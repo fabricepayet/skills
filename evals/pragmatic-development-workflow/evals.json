@@ -46,6 +46,50 @@
         "Runs unrelated broad checks as a substitute for configuration validation",
         "Asks the user to reconfirm an explicitly supplied value and environment"
       ]
+    },
+    {
+      "id": "unknown-bug-cause-routes-to-debugging",
+      "prompt": "Fix an intermittent production timeout. The failing component and cause are unknown, local tests pass, and several speculative fixes have already been proposed.",
+      "expectations": [
+        "Routes cause discovery through systematic debugging before selecting a fix",
+        "Traces a failing case across system boundaries and compares it with a working case",
+        "Tests falsifiable hypotheses instead of combining speculative fixes",
+        "Implements only after the evidence supports a cause and authorized correction"
+      ],
+      "forbidden": [
+        "Chooses a speculative fix before locating the failure",
+        "Treats passing local tests as evidence against a production-only failure",
+        "Requests routine implementation approval after the cause and scope become clear"
+      ]
+    },
+    {
+      "id": "known-bug-cause-advances-directly",
+      "prompt": "Fix a deterministic off-by-one error in an existing pagination helper. A focused test already reproduces the failure, the expected result is explicit, and all callers use the same contract.",
+      "expectations": [
+        "Treats the task as bounded because the cause and expected behavior are established",
+        "Implements the smallest durable correction without reopening root-cause investigation",
+        "Runs the existing regression test and affected broader checks",
+        "Proceeds without a separate approval, specification document, or subagent workflow"
+      ],
+      "forbidden": [
+        "Restarts broad exploratory debugging despite decisive evidence",
+        "Asks the user to approve the obvious bounded correction",
+        "Claims completion from the pre-fix failing test"
+      ]
+    },
+    {
+      "id": "read-only-analysis-does-not-trigger-implementation",
+      "prompt": "Explain how the current checkout flow works and identify its main modules. Do not change any files.",
+      "expectations": [
+        "Recognizes that the implementation workflow does not apply to a read-only explanation",
+        "Inspects the existing flow and reports its modules without editing",
+        "Keeps verification claims limited to the inspected evidence"
+      ],
+      "forbidden": [
+        "Modifies or refactors the checkout flow",
+        "Creates implementation tests or plans for unrequested changes",
+        "Treats analysis as authorization to implement"
+      ]
     }
   ]
 }

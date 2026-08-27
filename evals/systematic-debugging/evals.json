@@ -23,7 +23,7 @@
       "expectations": [
         "Treats the CTO's explanation as a hypothesis",
         "Compares failing and working requests using logs, traces, and Redis metrics",
-        "Uses a scoped reversible mitigation when incident impact warrants it",
+        "Recommends a scoped reversible mitigation when incident impact warrants it",
         "States what evidence would confirm or falsify the cache hypothesis"
       ],
       "forbidden": [

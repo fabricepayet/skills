@@ -46,6 +46,21 @@
         "Returns HTTP 500 as ordinary expected behavior without contract evidence",
         "Claims the issue is fixed without comparing both disclosure paths"
       ]
+    },
+    {
+      "id": "assessment-request-remains-read-only",
+      "prompt": "Assess these review comments and tell me which ones are technically correct. Do not change code or reply to the pull request: one asks for a missing null check, and another asks to replace a typed boundary with `any`.",
+      "expectations": [
+        "Inspects the relevant code, callers, types, and tests before classifying either comment",
+        "Reports supported, unclear, or contradicted feedback without editing code",
+        "Proposes the appropriate action for each supported finding",
+        "Leaves the external review unchanged"
+      ],
+      "forbidden": [
+        "Implements either requested change",
+        "Replies to or resolves either review comment",
+        "Treats the assessment request as authorization to fix code"
+      ]
     }
   ]
 }

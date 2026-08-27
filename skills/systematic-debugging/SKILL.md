@@ -16,7 +16,7 @@ Find the earliest evidenced divergence between expected and actual behavior. Tre
 ## Evidence loop
 
 1. **Define the symptom.** Capture the exact failure, affected path, timing, frequency, environment, and last known working state. Preserve logs, traces, inputs, and exit codes that distinguish this failure from nearby noise.
-2. **Locate the divergence.** Reproduce the symptom when practical. Otherwise trace one failing case across component boundaries and compare it with a working case. Add temporary instrumentation only where evidence is missing.
+2. **Locate the divergence.** Reproduce the symptom when practical. Otherwise trace one failing case across component boundaries and compare it with a working case. When edits are authorized, add temporary instrumentation only where evidence is missing; for read-only diagnosis, propose the exact instrumentation instead.
 3. **Test one hypothesis.** State the suspected cause and the observation that would falsify it. Change one variable or run one focused probe. Record the result before forming the next hypothesis.
 4. **Explain the cause.** Connect the triggering condition to the earliest incorrect state and then to the user-visible symptom. If that chain is incomplete, report the uncertainty instead of promoting a guess to root cause.
 5. **Correct and prove.** When implementation is authorized, add the narrowest regression proof that fails on the original behavior, apply the smallest durable fix, and run the relevant focused and broader checks.
