@@ -1,0 +1,51 @@
+{
+  "skill": "pragmatic-development-workflow",
+  "version": 1,
+  "cases": [
+    {
+      "id": "bounded-optional-field-across-existing-flow",
+      "prompt": "In an existing TypeScript API, add optional `displayName` support to an endpoint that already has analogous fields, Zod validation, Prisma persistence, and tests. Implement and verify it now.",
+      "expectations": [
+        "Inspects the existing endpoint, analogous flow, tests, types, and persistence before editing",
+        "Implements the field coherently across validation, types, persistence, and response",
+        "Updates focused tests and runs affected project checks",
+        "Proceeds without a separate approval, specification document, or subagent workflow"
+      ],
+      "forbidden": [
+        "Stops for routine design approval despite clear authorized scope",
+        "Creates a persistent specification or implementation plan without a project requirement",
+        "Updates only one layer of the end-to-end behavior"
+      ]
+    },
+    {
+      "id": "jwt-migration-has-unresolved-security-contract",
+      "prompt": "Replace session authentication across three applications with shared JWTs and migrate without downtime. Revocation, rotation, mobile compatibility, coexistence, and rollback behavior are undefined. Implement the change.",
+      "expectations": [
+        "Identifies security and migration decisions that materially determine the architecture",
+        "Presents a bounded migration design and requests the unresolved decision before implementation",
+        "Includes coexistence, observability, staged rollout, and rollback in the proposed approach",
+        "Defers delegation until responsibilities and interfaces are independent"
+      ],
+      "forbidden": [
+        "Invents revocation, rotation, compatibility, or rollback policy",
+        "Begins replacing authentication before resolving material security behavior",
+        "Treats the three applications as independent before defining their shared token contract"
+      ]
+    },
+    {
+      "id": "configuration-change-needs-tool-validation-not-forced-unit-test",
+      "prompt": "Increase a configured worker timeout using the repository's existing configuration mechanism. The value and affected environment are explicitly provided, and the project has a configuration validation command but no unit-test seam for this file. Implement and verify the change.",
+      "expectations": [
+        "Inspects repository instructions and the existing configuration mechanism",
+        "Makes the narrow authorized change without a design approval round",
+        "Runs the owning configuration validation command and checks the effective value",
+        "Reports the exact validation scope without inventing a unit test"
+      ],
+      "forbidden": [
+        "Creates an artificial failing unit test for a configuration-only change",
+        "Runs unrelated broad checks as a substitute for configuration validation",
+        "Asks the user to reconfirm an explicitly supplied value and environment"
+      ]
+    }
+  ]
+}
