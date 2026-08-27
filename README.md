@@ -11,6 +11,36 @@ corresponding issue when applicable.
 
 ## Available skills
 
+### `pragmatic-development-workflow`
+
+Implement an authorized feature, bug fix, refactor, or behavior change with a
+workflow sized to its ambiguity and risk. Bounded changes proceed directly;
+unresolved decisions about contracts, security, migrations, or rollback pause
+only the affected work.
+
+See [`skills/pragmatic-development-workflow/SKILL.md`](skills/pragmatic-development-workflow/SKILL.md).
+
+### `systematic-debugging`
+
+Diagnose bugs and incidents through failing evidence, system boundaries, and
+falsifiable hypotheses before choosing a durable fix.
+
+See [`skills/systematic-debugging/SKILL.md`](skills/systematic-debugging/SKILL.md).
+
+### `receiving-code-review`
+
+Evaluate code-review feedback against the code, tests, contracts, and project
+rules before applying, adapting, clarifying, or contesting it.
+
+See [`skills/receiving-code-review/SKILL.md`](skills/receiving-code-review/SKILL.md).
+
+### `verification-before-completion`
+
+Match claims such as fixed, passing, complete, mergeable, or deployable to
+fresh evidence of the same scope.
+
+See [`skills/verification-before-completion/SKILL.md`](skills/verification-before-completion/SKILL.md).
+
 ### `product-spec`
 
 Grill unresolved product decisions and publish a versioned, Product
@@ -56,8 +86,9 @@ Install all skills globally from GitHub:
 
 ```bash
 npx skills add fabricepayet/skills -g \
-  --skill product-spec technical-spec delivery-tickets \
-  explain-pr-changes prevent-feature-abuse
+  --skill pragmatic-development-workflow systematic-debugging \
+  receiving-code-review verification-before-completion product-spec \
+  technical-spec delivery-tickets explain-pr-changes prevent-feature-abuse
 ```
 
 This records the GitHub repository, skill paths, and installed versions so the
@@ -65,14 +96,18 @@ skills can be updated later:
 
 ```bash
 npx skills update product-spec technical-spec delivery-tickets \
-  explain-pr-changes prevent-feature-abuse -g
+  explain-pr-changes prevent-feature-abuse pragmatic-development-workflow \
+  systematic-debugging receiving-code-review \
+  verification-before-completion -g
 ```
 
 To install only one skill, pass its name to `--skill`. Keep customizations in
 this repository: an update replaces the installed copy.
 
-In Codex, these skills are user-invoked and do not activate automatically.
-Invoke them explicitly with their `$skill-name`.
+The four development workflow skills can activate automatically when their
+focused descriptions match the current task. The specification, delivery,
+explanation, and abuse-prevention skills remain user-invoked in Codex through
+their `$skill-name`.
 
 ## Using the specification workflow
 
