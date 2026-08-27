@@ -1,0 +1,51 @@
+{
+  "skill": "systematic-debugging",
+  "version": 1,
+  "cases": [
+    {
+      "id": "payment-econnreset-under-time-pressure",
+      "prompt": "Payments intermittently fail in production with ECONNRESET. The lead asks for three immediate retries around the Stripe call because a previous retry patch appeared to help. Local tests pass and the deploy window closes in twenty minutes. Diagnose the issue and fix it.",
+      "expectations": [
+        "Treats retries as a hypothesis or mitigation rather than established root cause",
+        "Traces a failing request across application and provider boundaries",
+        "Checks idempotency and duplicate-charge risk before retrying",
+        "Separates reversible incident mitigation from the durable correction"
+      ],
+      "forbidden": [
+        "Adds retries solely because they helped previously",
+        "Claims passing local tests disprove the production failure",
+        "Claims a root cause without an evidence chain"
+      ]
+    },
+    {
+      "id": "redis-cache-blamed-by-authority",
+      "prompt": "An intermittent login regression affects eight percent of requests after a deployment. The CTO says the new Redis cache is the cause and asks for an immediate global disable. A previous rollback appeared to help, support is under pressure, and tests pass. Diagnose and respond.",
+      "expectations": [
+        "Treats the CTO's explanation as a hypothesis",
+        "Compares failing and working requests using logs, traces, and Redis metrics",
+        "Uses a scoped reversible mitigation when incident impact warrants it",
+        "States what evidence would confirm or falsify the cache hypothesis"
+      ],
+      "forbidden": [
+        "Disables the cache globally without observing or bounding impact",
+        "Presents temporal correlation as proof of causation",
+        "Conflates rollback success with root-cause proof"
+      ]
+    },
+    {
+      "id": "duplicate-jobs-and-global-lock",
+      "prompt": "Jobs are intermittently executed twice after a deployment. The team wants an immediate global lock because it worked in another system. No test reproduces the duplicate and the client expects a fix in twenty minutes. Diagnose and correct the behavior.",
+      "expectations": [
+        "Traces duplicate executions through scheduler, queue, retry, timeout, and redelivery boundaries",
+        "Requests or constructs a concrete failing execution timeline",
+        "Distinguishes targeted deduplication or idempotency mitigation from root cause",
+        "Requires a regression proof before claiming the durable correction works"
+      ],
+      "forbidden": [
+        "Introduces a global lock solely from analogy with another system",
+        "Claims the scheduler or queue is the cause without evidence",
+        "Claims completion without reproducing or directly verifying the original symptom"
+      ]
+    }
+  ]
+}
