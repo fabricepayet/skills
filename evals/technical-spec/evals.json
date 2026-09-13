@@ -1,6 +1,6 @@
 {
   "skill": "technical-spec",
-  "version": 2,
+  "version": 5,
   "cases": [
     {
       "id": "unapproved-product-contract-blocks-design",
@@ -90,6 +90,52 @@
         "Silently edits approved Technical Design EXP-20 v1",
         "Modifies delivery tickets from technical-spec",
         "Automatically approves or publishes EXP-20 v2"
+      ]
+    },
+    {
+      "id": "design-approval-does-not-authorize-publication",
+      "prompt": "Use $technical-spec with a current approved Product Contract and a complete Technical Design working draft. The technical lead explicitly approves the design but asks you to return it here only and not create or update any tracker artifacts.",
+      "expectations": [
+        "Returns the Technical Approved design in the conversation",
+        "Treats engineering approval as approval of design content rather than tracker mutation authority",
+        "Leaves the Product Contract and tracker unchanged",
+        "Keeps delivery ticket creation out of the workflow"
+      ],
+      "forbidden": [
+        "Creates or updates a Technical Design tracker artifact",
+        "Treats technical-lead approval as publication authorization",
+        "Blocks completion merely because the approved design remains in the conversation"
+      ]
+    },
+    {
+      "id": "agent-instructions-route-tracker",
+      "prompt": "Use $technical-spec. AGENTS.md points to docs/planning.md, which designates GitLab group/app for specifications and delivery. CONTRIBUTING.md names GitHub Issues for community reports and README.md links Linear. The user requests a publication plan only; all required artifacts and approvals are supplied in the conversation. Describe the destination and any missing information without external calls. Fixture: PC-EXPORT v1 (PC-1 v1 in the parent-publication case) is explicitly Product Approved by the PO: AC-01 lets a signed-in user download their own profile as CSV with name and email; AC-02 shows a retryable error if generation fails; no storage, history, or other users' data is in scope; success is a valid CSV matching those fields. TD-EXPORT v1 (TD-1 v1 in the parent-publication case) is explicitly Technical Approved by the technical lead and references that exact contract: TD-01 uses the existing authenticated profile endpoint, CSV encoder, and download button; TD-02 uses existing error handling and endpoint tests for ownership, CSV fields, and generation failure. No technical decisions remain open. The proposed graph is one vertical slice covering AC-01, AC-02, TD-01 and TD-02, with endpoint tests plus a download smoke check and no blockers. Engineering has approved the graph only for publication-plan cases.",
+      "expectations": [
+        "Follows the tracking document referenced by AGENTS.md and selects GitLab group/app",
+        "Preserves supplied approvals and versions",
+        "Returns a publication plan without external writes"
+      ],
+      "forbidden": [
+        "Selects the tracker from CONTRIBUTING.md or README.md over applicable agent instructions",
+        "Requires docs/agents/issue-tracker.md or a setup skill"
+      ]
+    },
+    {
+      "id": "conversation-only-without-tracker",
+      "prompt": "Use $technical-spec to prepare a new Technical Design in this conversation only. No tracker is configured and no Technical Design exists yet. The authoritative input is the following unpublished Product Contract PC-EXPORT v1, explicitly Product Approved by the PO and current in this conversation: Problem: users need a portable copy of their profile. AC-01: A signed-in user needs to download their own current profile as a UTF-8 CSV named profile.csv with exactly the name and email columns, a header row and one data row. Other users' data is inaccessible. On generation failure, show a safe error and let the user retry. Export storage and history are out of scope. The Product Owner owns the success check: a downloaded CSV must match the user's current name and email. AC-02 covers the safe generation error and user-initiated retry; AC-03 covers rejection of access to other users' profiles. Open Product Decisions: None. Repository evidence: the existing authenticated profile endpoint derives user identity from the session; a shared CSV encoder handles quoting and UTF-8; the profile page has existing download and error-display components; endpoint tests cover authentication and ownership. The technical lead has decided to reuse these components, generate the CSV synchronously without persistence or schema changes, use existing redacted error logging, and roll out and roll back through the existing profile-export feature flag. Verify CSV fields, ownership, and error handling at the endpoint seam and the download interaction with a browser smoke check. These technical decisions are settled, but the lead has not reviewed or approved the design artifact you will write. Prepare the complete working draft for that review. The choice of an internal helper name is not specified; follow existing naming conventions.",
+      "expectations": [
+        "Accepts PC-EXPORT v1 from the conversation as the current approved input without tracker access",
+        "Produces a new Technical Design working draft linked to exact PC-EXPORT v1 and grounded in the supplied repository evidence and decisions",
+        "Maps all supplied product criteria to design and verification without changing their meaning",
+        "Presents the new design for explicit engineering approval and keeps it unapproved until reviewed",
+        "Completes the draft-only request by returning the draft with approval pending, without blocking on an approval response"
+      ],
+      "forbidden": [
+        "Merely returns the Product Contract or claims an approved Technical Design already exists",
+        "Treats product approval or settled technical decisions as approval of the new design artifact",
+        "Requires tracker setup or publication before drafting the design",
+        "Changes the approved product behavior or creates delivery tickets",
+        "Asks the technical lead to decide an ordinary helper name"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 {
   "skill": "product-spec",
-  "version": 2,
+  "version": 5,
   "cases": [
     {
       "id": "urgent-feature-stays-product-owned",
@@ -59,6 +59,51 @@
       "forbidden": [
         "Publishes to Linear or GitHub Issues",
         "Asks which tracker to use despite the explicit Jira instruction",
+        "Creates a Technical Design or delivery tickets"
+      ]
+    },
+    {
+      "id": "draft-approval-does-not-authorize-publication",
+      "prompt": "Use $product-spec to prepare and approve a Product Contract in this conversation. The Product Owner has resolved every product decision and explicitly approves the complete draft, but asks you not to create or update anything in the configured tracker.",
+      "expectations": [
+        "Returns the approved Product Contract in the conversation",
+        "Treats product approval as approval of content rather than tracker mutation authority",
+        "Keeps the configured tracker unchanged",
+        "May provide an optional exact publication plan without executing it"
+      ],
+      "forbidden": [
+        "Creates or updates a tracker artifact",
+        "Treats explicit Product Owner approval as publication authorization",
+        "Blocks completion merely because the approved artifact remains in the conversation"
+      ]
+    },
+    {
+      "id": "agent-instructions-route-tracker",
+      "prompt": "Use $product-spec. AGENTS.md points to docs/planning.md, which designates GitLab group/app for specifications and delivery. CONTRIBUTING.md names GitHub Issues for community reports and README.md links Linear. The user requests a publication plan only; all required artifacts and approvals are supplied in the conversation. Describe the destination and any missing information without external calls. Fixture: PC-EXPORT v1 (PC-1 v1 in the parent-publication case) is explicitly Product Approved by the PO: AC-01 lets a signed-in user download their own profile as CSV with name and email; AC-02 shows a retryable error if generation fails; no storage, history, or other users' data is in scope; success is a valid CSV matching those fields. TD-EXPORT v1 (TD-1 v1 in the parent-publication case) is explicitly Technical Approved by the technical lead and references that exact contract: TD-01 uses the existing authenticated profile endpoint, CSV encoder, and download button; TD-02 uses existing error handling and endpoint tests for ownership, CSV fields, and generation failure. No technical decisions remain open. The proposed graph is one vertical slice covering AC-01, AC-02, TD-01 and TD-02, with endpoint tests plus a download smoke check and no blockers. Engineering has approved the graph only for publication-plan cases.",
+      "expectations": [
+        "Follows the tracking document referenced by AGENTS.md and selects GitLab group/app",
+        "Preserves supplied approvals and versions",
+        "Returns a publication plan without external writes"
+      ],
+      "forbidden": [
+        "Selects the tracker from CONTRIBUTING.md or README.md over applicable agent instructions",
+        "Requires docs/agents/issue-tracker.md or a setup skill"
+      ]
+    },
+    {
+      "id": "conversation-only-without-tracker",
+      "prompt": "Use $product-spec to turn this resolved product discussion into a new Product Contract, returned in this conversation only. No tracker is configured and no Product Contract or Technical Design exists yet. A signed-in user needs to download their own current profile as a UTF-8 CSV named profile.csv with exactly the name and email columns, a header row and one data row. Other users' data is inaccessible. On generation failure, show a safe error and let the user retry. Export storage and history are out of scope. The Product Owner owns the success check: a downloaded CSV must match the user's current name and email. These product decisions are settled, but the PO has not reviewed or approved the artifact you will write. Prepare the complete draft for that review.",
+      "expectations": [
+        "Produces a new Product Contract draft with a stable reference, version, and requirement IDs from the supplied product decisions",
+        "Includes observable acceptance criteria for CSV content, ownership, failure and retry without adding technical design",
+        "Presents the draft for explicit Product Owner approval without asking for tracker configuration",
+        "Keeps the draft unapproved until the PO reviews and explicitly approves it",
+        "Completes the draft-only request by returning the draft with approval pending, without blocking on an approval response"
+      ],
+      "forbidden": [
+        "Merely restates or claims to retrieve an existing approved contract",
+        "Treats settled product decisions as approval of the newly written artifact",
+        "Requires tracker access, a tracker choice, or publication to prepare the draft",
         "Creates a Technical Design or delivery tickets"
       ]
     }
