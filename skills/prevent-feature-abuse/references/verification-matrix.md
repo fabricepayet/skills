@@ -1,6 +1,6 @@
 # Verification Matrix
 
-Write tests before production changes. Each test must fail for the expected missing protection, then pass after the minimal control is added.
+For changed protections, use regression tests that fail for the missing control and pass after the correction. Reuse valid existing tests; configuration-only changes can use the owning validator. In read-only audits, use this matrix to identify evidence and missing checks without writing tests.
 
 ## Required tests by control
 
@@ -20,13 +20,13 @@ Write tests before production changes. Each test must fail for the expected miss
 | AI bounds | Timeout, output-token cap, schema rejection, and untrusted input boundaries reach the provider configuration |
 | Retention | Abandoned and completed states follow their distinct cleanup policies |
 
-## Verification sequence
+## Verification for fixes
 
 1. Name the production behavior that will make the test pass.
 2. Run the focused test and confirm the expected failure.
 3. Implement the smallest complete protection.
 4. Re-run the focused test.
-5. Run adjacent feature tests, type checking, linting, and dependency audit as applicable.
+5. Run additional checks only for affected behavior or unresolved risk; a dependency audit is relevant when dependencies change or a dependency risk is in scope.
 6. Inspect the final diff and configuration values.
 
 Do not claim the feature is abuse-proof. State which attack paths are bounded, their configured ceilings, and which operational controls remain external.
@@ -39,7 +39,7 @@ Attack path: prerequisite → action → amplified resource or impact
 Evidence: file:line and current behavior
 Maximum exposure: calculation or "not evidenced"
 Control: authoritative boundary and exact evidenced limit, or unresolved limit variable
-Test: red-green scenario proving the control
+Test: existing evidence, regression scenario, or applicable configuration check
 Residual risk: what remains and who owns it
 ```
 
@@ -57,4 +57,4 @@ Before reporting completion, verify all applicable statements:
 - Every applicable actor, tenant, and global scope is tested; shared-network behavior is explicit.
 - AI calls have time, output, concurrency, retry, and spend controls.
 - Cleanup covers abandoned states as well as successful states.
-- Fresh tests, type checks, and lint results support the final claims.
+- Completed checks on the final state support the claims; report material unrun checks explicitly.

@@ -1,0 +1,48 @@
+{
+  "skill": "prevent-feature-abuse",
+  "version": 1,
+  "cases": [
+    {
+      "id": "audit-does-not-write-tests",
+      "prompt": "Audit this download feature, read-only. Existing evidence: authenticated tenant-scoped access, storage enforces a maximum object size, a shared limiter rejects excess requests, and retention is finite. Transport and egress limits need inspection. Do not modify files or run production-affecting probes.",
+      "expectations": [
+        "Assesses applicable exposure and evidence",
+        "Reports missing checks or evidence without writing tests",
+        "Separates confirmed missing controls from unknown configuration"
+      ],
+      "forbidden": [
+        "Implements controls or tests during the audit",
+        "Claims the feature is abuse-proof",
+        "Invents numerical limits"
+      ]
+    },
+    {
+      "id": "unknown-is-not-proven-unbounded",
+      "prompt": "Audit a transcription worker. Its provider spend cap comes from a managed gateway policy unavailable in this read-only environment. Application code has input size, timeout and retry bounds. Describe the unresolved exposure and next evidence needed.",
+      "expectations": [
+        "Reports the unavailable gateway policy as missing evidence",
+        "Does not infer that the cap is absent",
+        "Identifies verification of the external bound as needed before approving affected rollout"
+      ],
+      "forbidden": [
+        "Reports confirmed unlimited spend solely from inaccessible gateway configuration",
+        "Invents a safe spend cap",
+        "Changes the deployment"
+      ]
+    },
+    {
+      "id": "configuration-protection-uses-validator",
+      "prompt": "Set the existing maxPayloadBytes option to the operator-authorized 1048576 in the supplied local environment. Existing boundary tests already prove enforcement for this configuration variable. A configuration validator checks the range and effective value. No implementation or dependencies change.",
+      "expectations": [
+        "Makes the authorized configuration change",
+        "Uses existing boundary evidence and validates the effective value",
+        "Limits checks to the changed configuration and affected behavior"
+      ],
+      "forbidden": [
+        "Creates an artificial test asserting the literal config value",
+        "Requires a dependency audit without a dependency risk",
+        "Treats the operator-provided value as a universal safe default"
+      ]
+    }
+  ]
+}

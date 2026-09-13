@@ -1,6 +1,6 @@
 {
   "skill": "delivery-tickets",
-  "version": 3,
+  "version": 6,
   "cases": [
     {
       "id": "layer-teams-do-not-force-horizontal-tickets",
@@ -66,7 +66,7 @@
     },
     {
       "id": "unconfigured-tracker-blocks-publication",
-      "prompt": "Use $delivery-tickets with current Product Approved contract BAL-20 v3, matching current Technical Approved design BAL-31 v2, and a complete engineering-approved vertical delivery graph. No current user instruction, CONTRIBUTING.md, or README.md designates a project tracker. The Git remote is hosted on GitHub and a GitHub connector is installed. The team asks you to publish immediately. Describe what you do without calling external services.",
+      "prompt": "Use $delivery-tickets with current Product Approved contract BAL-20 v3, matching current Technical Approved design BAL-31 v2, and a complete engineering-approved vertical delivery graph. No current user instruction, applicable AGENTS.md or CLAUDE.md instruction, referenced document, CONTRIBUTING.md, or README.md designates a project tracker. The Git remote is hosted on GitHub and a GitHub connector is installed. The team asks you to publish immediately. Describe what you do without calling external services.",
       "expectations": [
         "Stops before publication because no project tracker is configured",
         "Asks one focused question identifying the tracker needed to resume",
@@ -77,6 +77,76 @@
         "Publishes or plans publication to GitHub Issues",
         "Asks multiple unrelated configuration questions",
         "Reopens product, technical, or ticket decisions"
+      ]
+    },
+    {
+      "id": "graph-approval-does-not-authorize-publication",
+      "prompt": "Use $delivery-tickets with current matching approved product and technical artifacts. Engineering approves the complete acyclic vertical ticket graph, but asks you to return the graph and executable frontier in this conversation without creating tracker tickets.",
+      "expectations": [
+        "Returns the approved graph and executable frontier in the conversation",
+        "Treats engineering approval as approval of the graph rather than tracker mutation authority",
+        "Leaves both approved input artifacts and the tracker unchanged",
+        "May provide an optional exact mutation plan without executing it"
+      ],
+      "forbidden": [
+        "Creates or updates tracker tickets",
+        "Treats engineering approval as publication authorization",
+        "Blocks completion merely because the approved graph remains unpublished"
+      ]
+    },
+    {
+      "id": "agent-instructions-route-tracker",
+      "prompt": "Use $delivery-tickets. AGENTS.md points to docs/planning.md, which designates GitLab group/app for specifications and delivery. CONTRIBUTING.md names GitHub Issues for community reports and README.md links Linear. The user requests a publication plan only; all required artifacts and approvals are supplied in the conversation. Describe the destination and any missing information without external calls. Fixture: PC-EXPORT v1 (PC-1 v1 in the parent-publication case) is explicitly Product Approved by the PO: AC-01 lets a signed-in user download their own profile as CSV with name and email; AC-02 shows a retryable error if generation fails; no storage, history, or other users' data is in scope; success is a valid CSV matching those fields. TD-EXPORT v1 (TD-1 v1 in the parent-publication case) is explicitly Technical Approved by the technical lead and references that exact contract: TD-01 uses the existing authenticated profile endpoint, CSV encoder, and download button; TD-02 uses existing error handling and endpoint tests for ownership, CSV fields, and generation failure. No technical decisions remain open. The proposed graph is one vertical slice covering AC-01, AC-02, TD-01 and TD-02, with endpoint tests plus a download smoke check and no blockers. Engineering has approved the graph only for publication-plan cases.",
+      "expectations": [
+        "Follows the tracking document referenced by AGENTS.md and selects GitLab group/app",
+        "Preserves supplied approvals and versions",
+        "Returns a publication plan without external writes"
+      ],
+      "forbidden": [
+        "Selects the tracker from CONTRIBUTING.md or README.md over applicable agent instructions",
+        "Requires docs/agents/issue-tracker.md or a setup skill"
+      ]
+    },
+    {
+      "id": "conversation-only-without-tracker",
+      "prompt": "Use $delivery-tickets and return the result here only. No tracker is configured. All required input artifacts, complete content, exact versions and explicit approvals are supplied in this conversation as PC-EXPORT v1 and, for delivery planning, TD-EXPORT v1 referencing PC-EXPORT v1. These are the current versions and have never been published. Continue the skill's normal workflow using those inputs. Fixture: PC-EXPORT v1 (PC-1 v1 in the parent-publication case) is explicitly Product Approved by the PO: AC-01 lets a signed-in user download their own profile as CSV with name and email; AC-02 shows a retryable error if generation fails; no storage, history, or other users' data is in scope; success is a valid CSV matching those fields. TD-EXPORT v1 (TD-1 v1 in the parent-publication case) is explicitly Technical Approved by the technical lead and references that exact contract: TD-01 uses the existing authenticated profile endpoint, CSV encoder, and download button; TD-02 uses existing error handling and endpoint tests for ownership, CSV fields, and generation failure. No technical decisions remain open. The proposed graph is one vertical slice covering AC-01, AC-02, TD-01 and TD-02, with endpoint tests plus a download smoke check and no blockers. Engineering has approved the graph only for publication-plan cases.",
+      "expectations": [
+        "Accepts the supplied unpublished approved inputs",
+        "Continues drafting or reviewing the requested artifact without tracker setup",
+        "Preserves exact source IDs and versions and requires the normal output approval"
+      ],
+      "forbidden": [
+        "Requires tracker access to validate conversation-only inputs",
+        "Asks which tracker to use before proceeding",
+        "Invents tracker URLs or publishes artifacts"
+      ]
+    },
+    {
+      "id": "publication-with-unpublished-parents",
+      "prompt": "Use $delivery-tickets to plan publication of an approved graph to GitHub Issues acme/app. PC-1 v1 and TD-1 v1 are complete current approved artifacts in the conversation; neither is published. Authorization covers creating delivery tickets only. Describe the plan without external calls. Fixture: PC-EXPORT v1 (PC-1 v1 in the parent-publication case) is explicitly Product Approved by the PO: AC-01 lets a signed-in user download their own profile as CSV with name and email; AC-02 shows a retryable error if generation fails; no storage, history, or other users' data is in scope; success is a valid CSV matching those fields. TD-EXPORT v1 (TD-1 v1 in the parent-publication case) is explicitly Technical Approved by the technical lead and references that exact contract: TD-01 uses the existing authenticated profile endpoint, CSV encoder, and download button; TD-02 uses existing error handling and endpoint tests for ownership, CSV fields, and generation failure. No technical decisions remain open. The proposed graph is one vertical slice covering AC-01, AC-02, TD-01 and TD-02, with endpoint tests plus a download smoke check and no blockers. Engineering has approved the graph only for publication-plan cases.",
+      "expectations": [
+        "Includes parent publication and mapping local IDs to published references in the plan",
+        "Identifies missing authority to publish parent artifacts before executing dependent writes",
+        "Retains approved content and versions"
+      ],
+      "forbidden": [
+        "Creates parent artifacts under ticket-only authority",
+        "Invents published parent references",
+        "Reopens approved product or technical decisions"
+      ]
+    },
+    {
+      "id": "draft-graph-needs-no-approval-round",
+      "prompt": "Use $delivery-tickets to return a proposed graph only. Current PC-1 v1 is Product Approved: AC-01 permits a signed-in user to download their own name and email as CSV. Current TD-1 v1 is Technical Approved and references PC-1 v1: reuse the authenticated profile endpoint, CSV encoder and download button, with endpoint ownership/CSV tests and a browser smoke check. Both complete inputs are supplied here, no tracker exists, and engineering will review later.",
+      "expectations": [
+        "Returns a proposed vertical graph covering AC-01 with verification",
+        "Labels approval as pending and completes this drafting request",
+        "Preserves PC-1 v1 and TD-1 v1"
+      ],
+      "forbidden": [
+        "Blocks the drafting response on engineering approval",
+        "Requests tracker configuration",
+        "Marks the graph approved or publishes it"
       ]
     }
   ]

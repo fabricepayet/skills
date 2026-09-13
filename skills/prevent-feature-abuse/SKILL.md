@@ -1,6 +1,6 @@
 ---
 name: prevent-feature-abuse
-description: Use when auditing or implementing a feature exposed to excessive requests, uploads, retries, concurrency, queues, external API or AI spend, tenant quota exhaustion, replay, or offline resubmission, especially before rollout or after adding rate limiting.
+description: Audit or harden a feature against abuse, cost amplification, quota exhaustion, replay, unsafe retries, and unbounded resource use.
 ---
 
 # Prevent Feature Abuse
@@ -11,17 +11,17 @@ Bound the harm an actor can cause across the complete execution chain. Rate limi
 
 ## Scope and authority
 
-- Audit requests authorize inspection only. Fix requests authorize in-scope changes through test-driven development.
+- Audit requests authorize inspection only. Fix requests authorize in-scope controls and verification. For changed protections, prefer regression tests that expose the missing control; configuration-only changes can use the owning validator.
 - Read repository instructions and existing controls first.
 - Separate pre-existing findings from feature regressions.
 
 ## Workflow
 
-1. **Map the flow.** Trace client, API, storage, queue, worker, provider, retention, and cleanup. Mark trust, actor and tenant boundaries, idempotency, retries, and offline replay.
-2. **Compute exposure.** Bound requests, concurrency, bytes, retention, attempts, provider calls, tokens, and spend. An unproven bound is a finding.
-3. **Inventory threats.** Read [abuse-taxonomy.md](references/abuse-taxonomy.md) and test every applicable surface.
-4. **Select controls.** Read [control-patterns.md](references/control-patterns.md). Limit the real resource, not client-declared metadata.
-5. **Verify.** Read [verification-matrix.md](references/verification-matrix.md) before changes. Prove boundaries, outages, retries, replay, and offline behavior red then green.
+1. **Map the flow.** Trace the feature's applicable stages across client, API, storage, queue, worker, provider, retention, and cleanup. Mark trust, actor and tenant boundaries, idempotency, retries, and offline replay.
+2. **Compute exposure.** Bound requests, concurrency, bytes, retention, attempts, provider calls, tokens, and spend. Distinguish evidenced unbounded behavior from missing capacity or policy evidence; state the latter as an unresolved exposure estimate.
+3. **Inventory threats.** Use [abuse-taxonomy.md](references/abuse-taxonomy.md) for an audit's threat inventory; assess applicable surfaces with evidence.
+4. **Select controls.** Read relevant patterns in [control-patterns.md](references/control-patterns.md) when proposing or implementing controls. Limit the real resource, not client-declared metadata.
+5. **Verify.** For fixes or a requested test plan, use applicable rows of [verification-matrix.md](references/verification-matrix.md). For read-only audits, report evidence and missing checks without creating tests or implementing controls.
 
 ## Non-negotiable invariants
 
@@ -35,30 +35,9 @@ Bound the harm an actor can cause across the complete execution chain. Rate limi
 - Cap AI time, tokens, concurrency, retries, and provider spend.
 - Never invent exact limits or present unsupported numbers as "safe defaults." Derive them from evidenced capacity, provider constraints, legitimate bursts, product policy, and acceptable exposure; otherwise name the required variables and data, and mark the limit provisional or the rollout blocked.
 
-## Red flags
+## Findings and rollout
 
-Stop rollout or report a blocker when any applies:
-
-- Worst-case cost, storage, or work cannot be stated.
-- A signed upload trusts only the declared size.
-- An endpoint quota ignores queue or provider retries.
-- A costly path fails open when its limiter is unavailable.
-- A replay bypasses transport, byte, concurrency, authentication, or response-cost controls.
-- Actor, tenant, and global admission checks can partially consume counters or depend on best-effort refunds.
-- `429` becomes permanent data loss, consumes permanent-failure attempts, or causes unbounded automatic retries.
-- Payload reads, model output, queue depth, or resource retention are unbounded.
-
-## Rationalization checks
-
-| Rationalization | Required response |
-|---|---|
-| "We added rate limiting" | Recalculate the full downstream amplification chain. |
-| "Idempotent means free" | Meter every request's real transport cost; skip only duplicate business effects after replay is proven. |
-| "Each scope is atomic" | Make the complete multi-scope admission decision atomic and all-or-nothing. |
-| "Availability requires fail-open" | Separate durable ingestion from costly processing. |
-| "We must retry forever to preserve data" | Preserve the data, bound automatic retries, then pause for explicit resumable recovery. |
-| "We need a safe default now" | Do not invent a number. State the exposure variable, authoritative constraint, and production evidence needed to choose it. |
-| "The client declared the size" | Enforce the real size at storage and bounded-read boundaries. |
+Report a concrete attack path and impact for demonstrated missing controls. When capacity or policy evidence is unavailable, identify the missing input and provisional exposure separately; do not present an unknown as a proven exploit. Recommend blocking the affected rollout when an essential bound cannot be established, while continuing independent audit or hardening work. Audit findings do not authorize deployment changes.
 
 ## Output contract
 

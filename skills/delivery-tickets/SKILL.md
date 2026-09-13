@@ -1,23 +1,28 @@
 ---
 name: delivery-tickets
-description: Use when a team needs to decompose a current approved Product Contract and Technical Design into executable delivery tickets before implementation begins.
+description: Decompose a current approved Product Contract and Technical Design into executable delivery tickets before implementation.
 ---
 
 # Delivery Tickets
 
 ## Purpose
 
-Publish a dependency graph of **tracer-bullet vertical slices**. Each delivery ticket makes one narrow, complete behavior independently demonstrable or verifiable while preserving traceability to approved product and technical decisions.
+Produce a dependency graph of **tracer-bullet vertical slices** and publish it when authorized. Each delivery ticket makes one narrow, complete behavior independently demonstrable or verifiable while preserving traceability to approved product and technical decisions.
+
+## Scope and authority
+
+- A planning request is complete when the proposed graph is returned for review, with any gaps identified; it does not require approval of that graph.
+- Creating or updating tracker tickets requires explicit publication authorization in the current request or established task scope. Engineering approval confirms the graph; it does not authorize external mutations by itself. Reuse approval of the unchanged graph.
 
 ## Tracker resolution
 
-Before reading or mutating tracked artifacts, resolve the project tracker in this order:
+Use the tracker designated for the consuming project: current user instructions, then applicable `AGENTS.md` / `CLAUDE.md` and their references, then `CONTRIBUTING.md`, then `README.md`. A Git host or installed connector alone does not designate a tracker. Reuse established choices and project conventions; resolve conflicts by instruction scope.
 
-1. an explicit instruction from the user for the current work;
-2. the repository's root `CONTRIBUTING.md` and any contribution document it explicitly delegates to;
-3. the repository's root `README.md`.
+Drafting needs no tracker. Before a tracked operation, ask only for the missing destination or information needed for that operation. No setup skill or fixed configuration path is required.
 
-A tracker is configured only when the selected source explicitly designates it for product or issue tracking. A Git host, remote URL, installed connector, badge, or incidental tracker link is not enough. When the selected source names multiple trackers without routing this work, or none of the sources configures one, ask one focused question before publishing. Follow the documented project, issue type, hierarchy, labels, and workflow states when they exist.
+## Artifact references
+
+Use complete inputs from the conversation, supplied files, or the tracker, with stable references, exact versions, and evidenced approval where required. Check currency at the authoritative source; conversation-only inputs need no tracker access. Ask for unavailable content or evidence rather than inventing it. If publication depends on unpublished parents, plan their publication and reference mapping within the user's authorization.
 
 ## Input gate
 
@@ -30,13 +35,15 @@ Stop when either artifact is missing, unapproved, superseded, or mismatched. Del
 
 ## Workflow
 
+For a draft-only request, return the draft at the review step with pending approval clearly labeled. Continue through approval and publication only when requested; existing approval of unchanged content remains valid.
+
 1. **Resolve inputs.** Read both complete artifacts, their revision notes, stable IDs, and tracker relationships. Read repository instructions, domain terminology, ADRs, relevant code, and prior tests when needed to size executable slices.
 2. **Build coverage maps.** Account for every Product Contract rule and acceptance criterion and every Technical Design decision. Identify independent observable outcomes rather than implementation layers.
 3. **Detect specification gaps.** Route missing observable behavior to a Product Clarification Request and `product-spec`. A newly approved Product Contract version requires `technical-spec` to revise the affected design before ticketing resumes. Route missing engineering decisions directly to a Technical Design revision. Block only affected work; continue drafting unrelated slices when their inputs are complete.
 4. **Draft vertical slices.** Apply every vertical-slice invariant below. Give each ticket only genuine blocking edges and keep the executable frontier as wide as the design allows.
-5. **Review the graph.** Present the complete proposed breakdown before mutating the tracker. For each ticket show its outcome, covered IDs, relevant technical path, independent verification, and blockers. Ask whether granularity, coverage, and blocking edges are correct; iterate until engineering explicitly approves.
-6. **Publish.** Create tickets in dependency order in the resolved tracker so native references can be added. Make them direct children of the Product Contract and relate each to the Technical Design when the tracker supports those relationships. Use native blocking links, configured ready state, and existing labels; fall back to explicit metadata in the body.
-7. **Report the frontier.** List every published ticket whose blockers are already complete or empty. Leave both approved input artifacts unchanged.
+5. **Review the graph.** Present the complete proposed breakdown before any tracker mutation. For each ticket show its outcome, covered IDs, relevant technical path, independent verification, and blockers. Ask whether granularity, coverage, and blocking edges are correct; iterate until engineering explicitly approves.
+6. **Finalize.** When publication is authorized, create tickets in dependency order in the resolved tracker so native references can be added. Otherwise return the approved graph and, when requested, a mutation plan without changing the tracker. When published, make tickets direct children of the Product Contract and relate each to the Technical Design when the tracker supports those relationships. Use native blocking links, configured ready state, and existing labels; fall back to explicit metadata in the body.
+7. **Report the frontier.** List every approved ticket whose blockers are already complete or empty, using published references when available. Leave both approved input artifacts unchanged.
 
 ## Vertical-slice invariants
 
@@ -54,22 +61,16 @@ Team boundaries do not justify horizontal tickets. Minimize dependencies: a tick
 
 A non-vertical ticket is allowed only when no vertical slice can land green without a preparatory change. Record the evidence, affected scope, bounded exit criterion, and downstream slices it unlocks.
 
-For a wide mechanical refactor, use **expand–contract**:
-
-1. expand by introducing the new form beside the old while keeping the system green;
-2. migrate consumers in bounded, independently green batches;
-3. contract by removing the old form after every migration batch completes.
-
-When a migration batch cannot be green alone, declare the shared integration boundary and add a final integrate-and-verify ticket. Never disguise technical preparation as user-visible value.
+For a wide mechanical refactor or inseparable migration batches, read [migration-slices.md](references/migration-slices.md).
 
 ## Delivery ticket
 
 ```markdown
 # <observable outcome>
 
-Status: <configured ready state>
-Parent Product Contract: <tracker reference>@v<integer>
-Technical Design: <tracker reference>@v<integer>
+Status: <configured ready state, or Draft / Approved for unpublished work>
+Parent Product Contract: <artifact ID or source reference>@v<integer>
+Technical Design: <artifact ID or source reference>@v<integer>
 
 ## What this delivers
 ## Product criteria covered
@@ -84,4 +85,4 @@ Omit Technical exception for a normal vertical slice. Prefer stable domain, modu
 
 ## Completion gate
 
-Finish only when engineering has approved the breakdown; every product criterion and technical decision is mapped; every ticket is vertical or carries a proven bounded exception; every ticket has independent verification; the blocking graph is acyclic; and the tracker exposes the immediately executable frontier.
+For an approved handoff, require engineering approval of the graph, complete coverage of the inputs, the vertical-slice invariants, and an acyclic blocking graph. When publication was authorized, verify the tracker exposes the immediately executable frontier; otherwise return that frontier and any requested mutation plan.

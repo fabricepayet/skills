@@ -56,8 +56,8 @@ Install all skills globally from GitHub:
 
 ```bash
 npx skills add fabricepayet/skills -g \
-  --skill product-spec technical-spec delivery-tickets \
-  explain-pr-changes prevent-feature-abuse
+  --skill product-spec \
+  technical-spec delivery-tickets explain-pr-changes prevent-feature-abuse
 ```
 
 This records the GitHub repository, skill paths, and installed versions so the
@@ -71,8 +71,7 @@ npx skills update product-spec technical-spec delivery-tickets \
 To install only one skill, pass its name to `--skill`. Keep customizations in
 this repository: an update replaces the installed copy.
 
-In Codex, these skills are user-invoked and do not activate automatically.
-Invoke them explicitly with their `$skill-name`.
+These five skills are explicitly invoked in Codex through their `$skill-name`.
 
 ## Using the specification workflow
 
@@ -84,10 +83,59 @@ $technical-spec -> approved Technical Design
 $delivery-tickets -> vertical implementation tickets
 ```
 
+A draft-only request ends with the document returned for review, with approval
+pending. Approved handoffs retain their product and engineering approval
+requirements. Routine technical choices follow repository conventions and are
+recorded in the design; questions focus on material unresolved decisions.
+
 An approved Product Contract is locked. Missing product behavior creates a
 Product Clarification Request and returns to `$product-spec`; technical design
 cannot change the contract silently. Delivery tickets are published only after
 both artifacts and the proposed ticket graph have been approved.
+
+### Configure issue tracking in the consuming project
+
+Each skill reads the instructions of the project where you use it. A current
+user instruction takes precedence, followed by applicable `AGENTS.md` or
+`CLAUDE.md` instructions and their referenced documents. If those do not name
+a tracker, the skill checks `CONTRIBUTING.md`, then `README.md`.
+
+Add a short section to your existing project instructions. These are alternative
+examples; replace the sample destinations with your own:
+
+```markdown
+## Issue tracking
+
+Use GitHub Issues in acme/customer-portal for specifications and delivery tickets.
+```
+
+```markdown
+## Issue tracking
+
+Use GitLab Issues in acme/customer-portal for specifications and delivery tickets.
+```
+
+```markdown
+## Issue tracking
+
+Use Linear team Platform, project Customer Portal, for specifications and delivery tickets.
+```
+
+Add issue types, statuses, labels, and parent or blocking relationships when
+your project has conventions for them. Longer instructions can live in any
+file linked from the project instructions. No setup skill or required file
+path is needed. Keep credentials in your environment or connected tools.
+
+The skills reuse tracker choices made in the conversation and ask for missing
+details only when needed for a tracked operation. Hosting code on GitHub does
+not automatically select GitHub Issues. This collection's own tracker is for
+contributions to this collection, not for projects that install its skills.
+
+You can also complete the specification workflow in the conversation using
+approved, versioned artifacts, or supply them as local files. Tracker-backed
+inputs are checked against their source. Publication requires a resolved
+destination and authorization; if parents are unpublished, the publication
+plan includes publishing them and mapping their references.
 
 ## Why three separate skills?
 
@@ -115,8 +163,8 @@ product behavior.
 interview. The product grilling resolves **what and why** without choosing an
 implementation. The technical grilling resolves **how** without redefining the
 approved product. Both ask only the current frontier of independent questions,
-provide recommendations, and continue until no decision in their authority
-remains open.
+provide recommendations, and resolve material decisions before approval.
+Routine technical choices are recorded in the design.
 
 ### Handoffs and clarification
 
@@ -156,10 +204,12 @@ figures.
 
 ## Evaluation
 
-Reusable behavior scenarios live under [`evals`](evals). The latest
+Reusable behavior scenarios live under [`evals`](evals). Historical
 multi-model results for `prevent-feature-abuse` are recorded in
-[`model-matrix.json`](evals/prevent-feature-abuse/model-matrix.json). Every pull
-request validates the Agent Skills packages and evaluation manifests.
+[`model-matrix.json`](evals/prevent-feature-abuse/model-matrix.json); they do not
+validate later skill revisions. Additional audit-mode scenarios live in
+[`astra/evals.json`](evals/prevent-feature-abuse/astra/evals.json).
+Every pull request validates the Agent Skills packages and evaluation manifests.
 
 ## Inspiration
 
